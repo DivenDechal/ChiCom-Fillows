@@ -4,3 +4,11 @@ BP = Blueprint('BP', __name__)
 @BP.route('/')
 def home():
     return render_template('main.html', user=session.get('user'))
+
+@BP.route('/login')
+def login():
+    return render_template('signin.html')
+
+@BP.route('/signup')
+def signup():
+    return render_template('signup.html')
