@@ -1,3 +1,4 @@
+
 // Common form handling for both pages
 document.addEventListener('DOMContentLoaded', () => {
     // Sign Up Form Handling
@@ -8,7 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add your signup logic here
         alert('Sign up successful!');
         window.location.href = 'index.html';
+        signupForm.submit();
       });
+      
     }
   
     // Sign In Form Handling
@@ -19,6 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add your signin logic here
         alert('Sign in successful!');
         window.location.href = 'index.html';
+        signinForm.submit();
       });
     }
   });
+
+  
+  

@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, session
+
 BP = Blueprint('BP', __name__)
 
 @BP.route('/')

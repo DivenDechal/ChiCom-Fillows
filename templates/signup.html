@@ -10,17 +10,17 @@
 <body>
   <div class="auth-container">
     <h2>Sign Up</h2>
-    <form id="signup-form">
-      <input type="text" placeholder="Username" required>
-      <input type="email" placeholder="Email" required>
-      <input type="password" placeholder="Password" required>
-      <input type="confirm password" placeholder="Confirm Password" required>
-      <input type="monthly income" placeholder="Monthly Income" required>
-      <input type="saving percentage" placeholder="Saving Percentage" required>
+    <form id="signup-form" action="{{ url_for('BP_auth.signup_post') }}" method="POST">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+      <input type="number" name="monthly_income" placeholder="Monthly Income" required>
+      <input type="number" name="saving_percentage" placeholder="Saving Percentage (0-100)" min="0" max="100" required>
       <button type="submit" class="btn">Sign Up</button>
     </form>
     <div class="toggle-link">
-      Already have an account? <a onclick="window.location.href= '/login' ">Sign In</a>
+      Already have an account? <a href="{{ url_for('BP.login') }}">Sign In</a>
     </div>
   </div>
   <script src="/static/auth.js"></script>
