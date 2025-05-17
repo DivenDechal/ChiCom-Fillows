@@ -18,8 +18,8 @@ db.init_app(app)
 @app.cli.command()
 def initdb():
     with app.app_context():
-     db.create_all()
-print("Database created!")
+        db.create_all()
+    print("Database created!")
 
 if __name__ == '__main__':
     app.run(debug=True)
