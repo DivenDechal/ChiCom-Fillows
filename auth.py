@@ -5,16 +5,33 @@ from sqlalchemy.exc import IntegrityError
 
 BP_auth = Blueprint('BP_auth', __name__)
 
-@BP_auth.route('/check-email', methods=['POST'])
-def check_email():
-    data = request.get_json()
-    email = data.get('email')
+@BP_auth.route('/signin', methods=['POST'])
+def signin_post():
+    try:
+        
+        email = request.form.get('email')
+        password = request.form.get('password')
+        # Basic validation
+        if not all([email, password]):
+            flash('All fields are required', 'error')
+            return jsonify(success=False, message="Invalid email or password" ),200
 
-    if not email:
-        return jsonify({'error': 'Email is required'}), 400
+        
 
-    user = User.query.filter_by(email=email).first()
-    return jsonify({'exists': user is not None})
+        user = User.query.filter_by(email=email).first()
+        if not user or not user.check_password(password):
+            return jsonify(success=False, message="Invalid email or password"),401
+        
+        session['user_id'] = user.id
+        session['username'] = user.username
+
+        flash('Account created successfully, please login.', 'success')
+        return jsonify(success=True, message="Login successful!" ),200
+    
+    except Exception as e:
+        flash('An error occured during registration', 'error')
+        return jsonify(success=False, message = "Error"), 500
+
 
 @BP_auth.route('/signup', methods=['POST'])
 def signup_post():
@@ -27,7 +44,7 @@ def signup_post():
         saving_percentage = int(request.form.get('saving_percentage', 0))
 
         # Basic validation
-        if not all([username, email, password, confirm_password]):
+        if not all([email, password]):
             flash('All fields are required', 'error')
             return redirect(url_for('BP.signup'))
 
@@ -39,9 +56,7 @@ def signup_post():
             flash('Email already exists', 'error')
             return redirect(url_for('BP.signup'))
 
-        if User.query.filter_by(username=username).first():
-            flash('Username already exists', 'error')
-            return redirect(url_for('BP.signup'))
+        
 
         # Create new user
         new_user = User(

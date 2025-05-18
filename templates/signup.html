@@ -10,13 +10,23 @@
 <body>
   <div class="auth-container">
     <h2>Sign Up</h2>
+    {% with messages = get_flashed_messages(with_categories = true) %}
+      {% if messages %}
+        <div class = "flash-messages">
+          {% for category, message in messages %}
+            <div class = "flash-message {{ category }} ">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
     <form id="signup-form">
-      <input type="text" placeholder="Username" required>
-      <input type="email" placeholder="Email" required>
-      <input type="password" placeholder="Password" required>
-      <input type="confirm password" placeholder="Confirm Password" required>
-      <input type="monthly income" placeholder="Monthly Income" required>
-      <input type="saving percentage" placeholder="Saving Percentage" required>
+      <input name ="Username" type="text" placeholder="Username" required>
+      <input name = "Email" type="password" placeholder="Password" required>
+      <input name = "Confirm Password" type="confirm password" placeholder="Confirm Password" required>
+      <input name = "Monthly Income" type="monthly income" placeholder="Monthly Income" required>
+      <input name = "Saving Percentage" type="saving percentage" placeholder="Saving Percentage" required>
       <button type="submit" class="btn">Sign Up</button>
     </form>
     <div class="toggle-link">

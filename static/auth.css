@@ -81,3 +81,27 @@
   .toggle-link a:hover {
     text-decoration: underline;
   }
+
+  .flash-messages{
+    margin-bottom: 1rem;
+  }
+
+  .flash-message {
+    padding: 10px;
+    border-radius : 4px;
+    margin-bottom: 5px;
+    font-weight:bold;
+  }
+
+  .flash-message.error{
+    background-color: #ffdddd;
+    color: #d8000c;
+    border: 1px solid #d8000c;
+  }
+
+  .flash-message.success{
+    background-color: #ddffdd;
+    color: #270;
+    border: 1px solid #270;
+  }
+  
