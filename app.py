@@ -1,25 +1,33 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from models import db
+from auth import BP_auth
+from routes import BP  # Ensure this exists and doesn't cause import error
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'your-secret-key-here'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Suppress warning
+    # Initialize extensions
+    db.init_app(app)
 
+    # Register blueprints
+    app.register_blueprint(BP)  # Make sure this blueprint is defined correctly
+    app.register_blueprint(BP_auth, url_prefix='/auth')
 
-# Import and Register the blueprint
-from routes import BP
-app.register_blueprint(BP)
+    # CLI command to initialize the database
+    @app.cli.command("init-db")
+    def init_db():
+        """Initialize the database."""
+        with app.app_context():
+            db.create_all()
+            print("Database initialized!")
 
-db.init_app(app)
+    return app
 
-@app.cli.command()
-def initdb():
-    with app.app_context():
-        db.create_all()
-    print("Database created!")
-
+# For running directly
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True)
+
