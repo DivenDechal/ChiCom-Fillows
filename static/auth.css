@@ -12,6 +12,13 @@
     box-sizing: border-box;
   }
   
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+  }
+
   body {
     font-family: 'Roboto', sans-serif;
     background: var(--light);
@@ -19,7 +26,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 120vh;
   }
   
   .auth-container {
@@ -29,6 +36,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     max-width: 400px;
     width: 100%;
+    height: auto;
   }
   
   h2 {
@@ -44,7 +52,8 @@
   
   input {
     padding: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
+    margin-top: 1rem;
     border-radius: var(--radius);
     border: 1px solid #ccc;
     font-size: 1rem;
@@ -59,6 +68,7 @@
     border-radius: var(--radius);
     cursor: pointer;
     transition: background 0.3s;
+    margin-top: 3rem;
   }
   
   .btn:hover {
