@@ -12,3 +12,11 @@ def login():
 @BP.route('/signup')
 def signup():
     return render_template('signup.html')
+
+@BP.route('/budget')
+def budget():
+    return render_template('budget.html')
+
+@BP.route('/saving')
+def saving():
+    return render_template('savings.html')
