@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, redirect, url_for
 
 BP = Blueprint('BP', __name__)
 
@@ -13,3 +13,9 @@ def login():
 @BP.route('/signup')
 def signup():
     return render_template('signup.html')
+
+@BP.route('/saving')
+def saving():
+    if 'user_id' not in session:
+        return redirect(url_for('BP.login'))
+    return render_template('Saving.html')
