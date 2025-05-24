@@ -1,67 +1,44 @@
-from flask import Blueprint, request, flash, redirect, url_for, jsonify, session
+from flask import Blueprint, request, jsonify
 from models import db, User
-from werkzeug.security import generate_password_hash
-from sqlalchemy.exc import IntegrityError
+import re
 
 BP_auth = Blueprint('BP_auth', __name__)
-
-@BP_auth.route('/signin', methods=['POST'])
-def signin_post():
-    try:
-        
-        email = request.form.get('email')
-        password = request.form.get('password')
-        # Basic validation
-        if not all([email, password]):
-            flash('All fields are required', 'error')
-            return jsonify(success=False, message="Invalid email or password" ),200
-
-        
-
-        user = User.query.filter_by(email=email).first()
-        if not user or not user.check_password(password):
-            return jsonify(success=False, message="Invalid email or password"),401
-        
-        session['user_id'] = user.id
-        session['username'] = user.username
-
-        flash('Account created successfully, please login.', 'success')
-        return jsonify(success=True, message="Login successful!" ),200
-    
-    except Exception as e:
-        flash('An error occured during registration', 'error')
-        return jsonify(success=False, message = "Error"), 500
-
 
 @BP_auth.route('/signup', methods=['POST'])
 def signup_post():
     try:
         username = request.form.get('username')
-        email = request.form.get('email')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
-        monthly_income = float(request.form.get('monthly_income', 0))
-        saving_percentage = int(request.form.get('saving_percentage', 0))
+        income_raw = request.form.get('monthly_income', '0')
+        saving_raw = request.form.get('saving_percentage', '0')
 
-        # Basic validation
-        if not all([email, password]):
-            flash('All fields are required', 'error')
-            return redirect(url_for('BP.signup'))
+        # Validate required fields
+        if not all([username, password, confirm_password, income_raw, saving_raw]):
+            return jsonify(success=False, message="All fields are required."), 400
 
+        # Password checks
         if password != confirm_password:
-            flash('Passwords do not match', 'error')
-            return redirect(url_for('BP.signup'))
+            return jsonify(success=False, message="Passwords do not match."), 400
+        if len(password) < 6:
+            return jsonify(success=False, message="Password must be at least 6 characters long."), 400
 
-        if User.query.filter_by(email=email).first():
-            flash('Email already exists', 'error')
-            return redirect(url_for('BP.signup'))
+        # Validate numeric fields
+        try:
+            monthly_income = float(income_raw)
+            saving_percentage = int(saving_raw)
+            if monthly_income < 0 or not (0 <= saving_percentage <= 100):
+                return jsonify(success=False, message="Income must be positive and saving percentage must be 0–100."), 400
+        except ValueError:
+            return jsonify(success=False, message="Invalid input for income or saving percentage."), 400
 
-        
+        # Check for existing user
+        if User.query.filter_by(username=username).first():
+            return jsonify(success=False, message="Username already exists."), 409
 
-        # Create new user
+        # Create and save new user
         new_user = User(
             username=username,
-            email=email,
             income=monthly_income,
             splitting=saving_percentage
         )
@@ -69,15 +46,8 @@ def signup_post():
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Account created successfully! Please log in.', 'success')
-        return redirect(url_for('BP.login'))
-
-    except ValueError:
-        flash('Invalid input values', 'error')
-        return redirect(url_for('BP.signup'))
+        return jsonify(success=True, message="Account created successfully! Please sign in."), 200
 
     except Exception as e:
         db.session.rollback()
-        flash('An error occurred during registration', 'error')
-        return redirect(url_for('BP.signup'))
-
+        return jsonify(success=False, message="Server error. Please try again."), 500
