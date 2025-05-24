@@ -22,13 +22,15 @@
       {% endif %}
     {% endwith %}
     <form id="signup-form">
-      <input name ="Username" type="text" placeholder="Username" required>
-      <input name = "Email" type="password" placeholder="Password" required>
-      <input name = "Confirm Password" type="confirm password" placeholder="Confirm Password" required>
-      <input name = "Monthly Income" type="monthly income" placeholder="Monthly Income" required>
-      <input name = "Saving Percentage" type="saving percentage" placeholder="Saving Percentage" required>
+      <input name="username" type="text" placeholder="Username" required>
+      <input name="password" type="password" placeholder="Password" required>
+      <input name="confirm_password" type="password" placeholder="Confirm Password" required>
+      <input name="monthly_income" type="number" placeholder="Monthly Income" required>
+      <input name="saving_percentage" type="number" placeholder="Saving Percentage" required>
+      <div id="signup-form-error" style="color: red;"></div>
       <button type="submit" class="btn">Sign Up</button>
     </form>
+
     <div class="toggle-link">
       Already have an account? <a onclick="window.location.href= '/login' ">Sign In</a>
     </div>
