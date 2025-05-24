@@ -1,62 +1,75 @@
-// Common form handling for both pages
 document.addEventListener('DOMContentLoaded', () => {
-    // Sign Up Form Handling
-    const signupForm = document.getElementById('signup-form');
-    if(signupForm) {
-      signupForm.addEventListener('submit', async(e) => {
-        e.preventDefault();
-        // Add your signup logic here
-        const formData = new FormData(signupForm)
-        const data = new URLSearchParams(formData)
-        try{
-          const request = await fetch('/auth/signup', {
-            method : 'POST',
-            body : data
-          })
-          const result = await request.json();
+  const form = document.getElementById('signup-form');
+  const errorBox = document.getElementById('signup-form-error');
 
-          if(request.ok && result.success){
-            alert('Sign up successful!');
-          }else{
-            alert(result.message || 'Sign in failed !');
-          }
-        }catch (error) {
-          console.error('Signup error!','error')
-          alert('An error occured. Please try again !')
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (errorBox) errorBox.textContent = '';
+
+    const formData = new FormData(form);
+    const username = formData.get('username');
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirm_password');
+    const monthlyIncome = formData.get('monthly_income');
+    const savingPercentage = formData.get('saving_percentage');
+
+    // Basic Validation
+    if (!username || !password || !confirmPassword || !monthlyIncome || !savingPercentage) {
+      return showError('All fields are required.');
+    }
+
+    if (password !== confirmPassword) {
+      return showError('Passwords do not match.');
+    }
+
+    if (password.length < 6) {
+      return showError('Password must be at least 6 characters long.');
+    }
+
+    const income = parseFloat(monthlyIncome);
+    const saving = parseInt(savingPercentage);
+
+    if (isNaN(income) || income < 0) {
+      return showError('Monthly income must be a positive number.');
+    }
+
+    if (isNaN(saving) || saving < 0 || saving > 100) {
+      return showError('Saving percentage must be between 0 and 100.');
+    }
+
+    try {
+      const data = new URLSearchParams(formData);
+
+      const response = await fetch('/auth/signup', {
+        method: 'POST',
+        body: data,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
         }
-        
       });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        alert('Sign up successful!');
+        // Optional: Redirect after signup
+        // window.location.href = '/login';
+      } else {
+        showError(result.message || 'An error occurred.');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      showError('An unexpected error occurred. Please try again.');
+    }
+
+    function showError(message) {
+      if (errorBox) {
+        errorBox.textContent = message;
+      } else {
+        alert(message);
+      }
     }
   });
-    
-    
-  
-    // Sign In Form Handling
-    const signinForm = document.getElementById('signin-form');
-    if(signinForm) {
-      signinForm.addEventListener('submit', async(e) => {
-        e.preventDefault();
-
-        const formData = new FormData(signinForm)
-        const data = new URLSearchParams(formData)
-        // Add your signin logic here
-        try{
-          const request = await fetch('/auth/signin', {
-            method : 'POST',
-            body : data
-          })
-          const result = await request.json();
-
-          if(request.ok && result.success){
-            alert('Sign in successful!');
-          }else{
-            alert(result.message || 'Sign in failed !');
-          }
-        }catch (error) {
-          console.error('Login error!','error')
-          alert('An error occured. Please try again !')
-        }
-        
-      });
-    }
-  
+});
