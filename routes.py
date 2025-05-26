@@ -23,4 +23,4 @@ def budget():
 def saving():
     if 'user_id' not in session:
         return redirect(url_for('BP.login'))
-    return render_template('Saving.html')
+    return render_template('savings.html')
