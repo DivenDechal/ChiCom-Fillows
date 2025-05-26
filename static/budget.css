@@ -295,6 +295,32 @@ footer {
     margin-right: 10px;
 }
 
+.chart-container {
+  min-height: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* This is only for when the chart is visible */
+.chart-container.has-chart .total-budget {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* This is for when the chart is hidden — total budget appears normally */
+.chart-container.no-chart .total-budget {
+  position: static;
+  transform: none;
+  margin-bottom: 20px;
+}
+
+
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     .budget-overview {
@@ -308,4 +334,6 @@ footer {
     .chart-container {
         margin-bottom: 30px;
     }
+
+    
 }

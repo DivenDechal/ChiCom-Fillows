@@ -8,17 +8,17 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)  # Changed 'pass' to 'password'
+    password = db.Column(db.String(100), nullable=False)
     income = db.Column(db.Float, nullable=False)
     splitting = db.Column(db.Integer, nullable=False)
-    savings_id = db.Column(db.Integer, db.ForeignKey('savings.savings_trans_id'))
+    savings_id = db.Column(db.Integer, db.ForeignKey('savings.id'))  # <-- FK changed here
     budget_id = db.Column(db.Integer, db.ForeignKey('budget.budget_id'))
+
     def set_password(self, password):
-         self.password = generate_password_hash(password)
+        self.password = generate_password_hash(password)
+
     def check_password(self, password):
         return check_password_hash(self.password, password)
-
-    
 
     savings = db.relationship('Savings', backref='user', lazy=True)
     budget = db.relationship('Budget', backref='user', lazy=True)
@@ -94,10 +94,21 @@ class Other(db.Model):
 
 
 class Savings(db.Model):
-    savings_trans_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)  # <-- renamed from savings_trans_id
     curr_savings = db.Column(db.Float, nullable=False)
     transaction = db.Column(db.String(255), nullable=True)
     date = db.Column(db.DateTime, nullable=True)
     detail = db.Column(db.Text, nullable=True)
+
+class SavingsTransaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    savings_id = db.Column(db.Integer, db.ForeignKey('savings.id'), nullable=False)  # <-- fix here
+    action = db.Column(db.String(10), nullable=False)  # 'save' or 'spend'
+    amount = db.Column(db.Float, nullable=False)
+    detail = db.Column(db.Text, nullable=True)
+    date = db.Column(db.DateTime, nullable=False)
+    
+
+    savings = db.relationship('Savings', backref=db.backref('transactions', lazy=True))
 
 
