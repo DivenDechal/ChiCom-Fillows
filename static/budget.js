@@ -65,15 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add click functionality to navigation
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
 
     // Log out button functionality
     const logOutBtn = document.querySelector('.log-out');

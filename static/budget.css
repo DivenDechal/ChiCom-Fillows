@@ -30,31 +30,17 @@ body {
 header {
     background-color: #1a56bb;
     color: white;
-    padding: 0px;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
 }
 
 .logo {
     font-size: 24px;
     font-weight: bold;
-}
-
-.log-out {
-    background-color: #2d7ae5;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.log-out:hover {
-    background-color: #1c5db9;
+    color:white;
+    text-decoration: none;
 }
 
 /* Navigation Styles */
@@ -78,37 +64,62 @@ header {
     font-weight: bold;
     color: var(--primary);
 }
-.nav-menu {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-.nav-menu li a {
-    color: var(--light);
-    font-weight: 500;
-    transition: color 0.3s;
-}
-.nav-menu li a:hover {
-    color: var(--primary);
-}
+
 nav {
     display: flex;
-    justify-content: center;
-    background-color: #1a56bb;
-    width: 100%;
+    margin-left: auto;
+    margin-right: 20px;
+    gap: 25px; /* Increased spacing between buttons */
 }
 
-/* Style nav links like headers */
 nav a {
     color: white;
     text-decoration: none;
-    padding: 15px 30px;
-    font-weight: 700;
-    font-size: 1.2rem;
+    padding: 12px 25px; /* Increased padding for better button appearance */
+    font-weight: 500;
     transition: all 0.3s ease;
-    text-align: center;
+    border-radius: 15px; /* Added curved edges */
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle background for all buttons */
+    border: 2px solid transparent; /* For smooth hover transition */
 }
+
+nav a.active {
+    background-color: #0f3a82;
+    border-bottom: 3px solid #ffffff;
+    border-radius: 15px; /* Keep curved edges for active state */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow for active button */
+}
+
+nav a:hover:not(.active) {
+    background-color: #0f3a82;
+    border-radius: 15px; /* Curved edges on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow on hover */
+}
+
+.account-icon {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 50%; /* Make it circular */
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.account-icon:hover {
+    background-color: #0f3a82;
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 
 /* Content Area Styles */
 .content {

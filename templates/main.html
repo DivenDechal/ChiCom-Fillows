@@ -9,22 +9,33 @@
 </head>
 <body>
   <!-- Navbar -->
-  <header>
+  <!-- <header>
     <nav class="navbar">
-      <div class="logo" onclick="window.location.href= '/' ">Fillow</div>
+      <a class="logo" href= '/' >FillUps</a>
       <input type="checkbox" id="nav-toggle" class="nav-toggle">
       <label for="nav-toggle" class="nav-toggle-label">
         <span></span>
       </label>
       <ul class="nav-menu">
-        <li><a href="#features">Features</a></li>
-        <li><a onclick="window.location.href= '/saving' ">Savings</a></li>
-        <li><a onclick="window.location.href= '/budget' ">Budget</a></li>
-        <li><a href="">Debt</a></li>
-        <li><a class="btn btn-primary" onclick="window.location.href= '/login' ">Log in</a></li>
+        <a href="#features">Features</a>
+        <a href='/saving' >Savings</a>
+        <a href='/budget' >Budget</a>
+        <a href="">Debt</a>
+        <a class="btn btn-primary" onclick="window.location.href= '/login' ">Log in</a>
       </ul>
     </nav>
-  </header>
+  </header> -->
+   <header>
+            <a href="/" class="logo">FillUps</a>
+            <nav>
+                <a href="/budget">Budget</a>
+                <a href="/saving" class="active">Savings</a>
+                <a href="debt.html">Debt</a>
+            </nav>
+            <button class="account-icon" title="Account">
+                <i class="fas fa-user"></i>
+            </button>
+        </header>
 
   <main>
     <!-- Hero Section -->

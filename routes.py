@@ -20,3 +20,7 @@ def budget():
 @BP.route('/saving')
 def saving():
     return render_template('savings.html')
+
+@BP.route('/account')
+def account():
+    return render_template('account.html')
