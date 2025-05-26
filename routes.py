@@ -14,6 +14,11 @@ def login():
 def signup():
     return render_template('signup.html')
 
+@BP.route('/budget')
+def budget():
+    return render_template('budget.html')
+
+
 @BP.route('/saving')
 def saving():
     if 'user_id' not in session:

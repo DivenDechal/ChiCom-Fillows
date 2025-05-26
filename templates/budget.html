@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fillow - Budget Tracker</title>
+    <link rel="stylesheet" href="/static/budget.css">
+    <!-- <link rel="stylesheet" href="/static/main.css"> -->
+
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo" onclick="window.location.href= '/' ">Fillow</div>
+        <span></span>
+      </label>
+      <ul class="nav-menu">
+        <li><a onclick="window.location.href= '/saving' ">Savings</a></li>
+        <li><a onclick="window.location.href= '/budget' ">Budget</a></li>
+        <li><a href="">Debt</a></li>
+        <li><a class="btn btn-primary" onclick="window.location.href= '/login' ">Log in</a></li>
+      </ul>
+    </nav>
+  </header>
+  <!-- ... rest of your budget page ... -->
+
+
+
+    <div class="container">
+        <!-- <header>
+            <div class="logo">Fillow</div>
+            <button class="log-out">Log Out</button>
+        </header>
+        
+        <nav>
+            <a href="#" class="active">Budget</a>
+            <a href="#">Saving</a>
+            <a href="#">Debt</a> -->
+        <!-- </nav> -->
+        
+        <div class="content">
+            <div class="budget-overview">
+                <div class="chart-container">
+                    <canvas id="budgetChart"></canvas>
+                    <div class="total-budget">
+                        <p>Total budget</p>
+                        <h2>Rp 15,000,000.00</h2>
+                    </div>
+                </div>
+                
+                <div class="budget-categories">
+                    <div class="category">
+                        <div class="category-icon accommodation-bg">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="category-details">
+                            <div class="category-name accommodation">Accommodation and Utilities</div>
+                            <div class="category-budget">Rp 6,000,000.00 left out of Rp 6,000,000.00 budget</div>
+                            <div class="progress-bar">
+                                <div class="progress accommodation-bg" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="category">
+                        <div class="category-icon entertainment-bg">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <div class="category-details">
+                            <div class="category-name entertainment">Entertainment</div>
+                            <div class="category-budget">Rp 1,000,000.00 left out of Rp 1,500,000.00 budget</div>
+                            <div class="progress-bar">
+                                <div class="progress entertainment-bg" style="width: 66.67%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="category">
+                        <div class="category-icon food-bg">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="category-details">
+                            <div class="category-name food">Food and Clothes</div>
+                            <div class="category-budget">Rp 2,000,000.00 left out of Rp 3,000,000.00 budget</div>
+                            <div class="progress-bar">
+                                <div class="progress food-bg" style="width: 66.67%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="category">
+                        <div class="category-icon transportation-bg">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="category-details">
+                            <div class="category-name transportation">Transportation</div>
+                            <div class="category-budget">Rp 750,000.00 left out of Rp 2,250,000.00 budget</div>
+                            <div class="progress-bar">
+                                <div class="progress transportation-bg" style="width: 33.33%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="category">
+                        <div class="category-icon subscription-bg">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="category-details">
+                            <div class="category-name subscription">Subscription</div>
+                            <div class="category-budget">Rp 500,000.00 left out of Rp 1,500,000.00 budget</div>
+                            <div class="progress-bar">
+                                <div class="progress subscription-bg" style="width: 33.33%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="category">
+                        <div class="category-icon others-bg">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                        <div class="category-details">
+                            <div class="category-name others">Others</div>
+                            <div class="category-budget">Rp 250,000.00 left out of Rp 750,000.00 budget</div>
+                            <div class="progress-bar">
+                                <div class="progress others-bg" style="width: 33.33%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <h3 class="footer-title">Contact Us</h3>
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> Call Us: +62 811-227-336</p>
+                <p><i class="fas fa-map-marker-alt"></i> Location: Binus Alam Sutera</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Font Awesome CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    
+    <script src="/static/budget.js"></script>
+</body>
+</html>
