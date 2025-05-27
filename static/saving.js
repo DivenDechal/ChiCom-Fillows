@@ -1,9 +1,3 @@
-/**
- * Savings Tracker JavaScript
- * Fillow Application
- * Filename: saving.js
- */
-
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize savings data
     let savingsData = {
@@ -75,7 +69,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle form submission
+    // New feature: Add Transaction function
+    function addTransaction(type, category, amount) {
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid amount');
+            return false;
+        }
+
+        const newTransaction = {
+            type: type,
+            category: category,
+            amount: amount,
+            date: new Date()
+        };
+
+        // Update savings amount
+        if (type === 'save') {
+            savingsData.currentSavings += amount;
+        } else {
+            savingsData.currentSavings -= amount;
+        }
+
+        // Add transaction to data
+        savingsData.transactions.push(newTransaction);
+
+        // Update UI
+        updateSavingsDisplay();
+        updateTransactionList();
+
+        return true;
+    }
+
+    // Handle form submission using addTransaction feature
     document.getElementById('transactionForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -83,36 +108,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const type = document.getElementById('transactionType').value;
         const category = document.getElementById('category').value;
         const amount = parseFloat(document.getElementById('amount').value);
-        
-        if (isNaN(amount) || amount <= 0) {
-            alert('Please enter a valid amount');
-            return;
+
+        const success = addTransaction(type, category, amount);
+        if (success) {
+            // Reset form only if the transaction was successfully added
+            document.getElementById('transactionForm').reset();
         }
-        
-        // Create new transaction
-        const newTransaction = {
-            type: type,
-            category: category,
-            amount: amount,
-            date: new Date()
-        };
-        
-        // Update savings amount
-        if (type === 'save') {
-            savingsData.currentSavings += amount;
-        } else {
-            savingsData.currentSavings -= amount;
-        }
-        
-        // Add transaction to data
-        savingsData.transactions.push(newTransaction);
-        
-        // Update UI
-        updateSavingsDisplay();
-        updateTransactionList();
-        
-        // Reset form
-        document.getElementById('transactionForm').reset();
     });
 
     // Initialize UI
