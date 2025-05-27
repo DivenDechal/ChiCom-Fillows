@@ -100,21 +100,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Handle form submission using addTransaction feature
-    document.getElementById('transactionForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // // Handle form submission using addTransaction feature
+    // document.getElementById('transactionForm').addEventListener('submit', function(e) {
+    //     e.preventDefault();
         
-        // Get form values
-        const type = document.getElementById('transactionType').value;
-        const category = document.getElementById('category').value;
-        const amount = parseFloat(document.getElementById('amount').value);
+    //     // Get form values
+    //     const type = document.getElementById('transactionType').value;
+    //     const category = document.getElementById('category').value;
+    //     const amount = parseFloat(document.getElementById('amount').value);
 
-        const success = addTransaction(type, category, amount);
-        if (success) {
-            // Reset form only if the transaction was successfully added
-            document.getElementById('transactionForm').reset();
-        }
-    });
+    //     const success = addTransaction(type, category, amount);
+    //     if (success) {
+    //         // Reset form only if the transaction was successfully added
+    //         document.getElementById('transactionForm').reset();
+    //     }
+    // });
 
     // Initialize UI
     updateSavingsDisplay();
