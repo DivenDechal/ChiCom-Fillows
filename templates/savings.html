@@ -27,17 +27,17 @@
             
             <div class="transaction-form">
                 <h3>Add Transaction</h3>
-                <form id="transactionForm">
+                <form id="transactionForm" method="POST" action="/add-transaction">
                     <div class="form-group">
                         <label for="transactionType">Transaction Type</label>
-                        <select id="transactionType" required>
+                        <select id="transactionType" name="transactionType" required>
                             <option value="save">Save Money</option>
                             <option value="spend">Spend Money</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="category">Category</label>
-                        <select id="category" required>
+                        <select id="category" name ="category" required>
                             <option value="Account Transfer">Account Transfer</option>
                             <option value="Accommodation and Utilities">Accommodation and Utilities</option>
                             <option value="Food and Clothes">Food and Clothes</option>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="form-group">
                         <label for="amount">Amount (Rp)</label>
-                        <input type="number" id="amount" placeholder="Enter amount" required min="0">
+                        <input type="number" id="amount" name="amount" placeholder="Enter amount" required min="0">
                     </div>
                     <button type="submit" class="submit-btn">Add Transaction</button>
                 </form>
