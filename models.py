@@ -28,21 +28,21 @@ class User(db.Model):
 class Budget(db.Model):
     budget_id = db.Column(db.Integer, primary_key=True)
     curr_total_budget = db.Column(db.Float, nullable=False)
-    acc_id = db.Column(db.Integer, db.ForeignKey('account.acc_id'))
+    acc_id = db.Column(db.Integer, db.ForeignKey('accommodation.acc_id'))
     ent_id = db.Column(db.Integer, db.ForeignKey('entertainment.ent_id'))
     food_id = db.Column(db.Integer, db.ForeignKey('food.food_id'))
     trs_id = db.Column(db.Integer, db.ForeignKey('transportation.trs_id'))
     subs_id = db.Column(db.Integer, db.ForeignKey('subscription.subs_id'))
     other_id = db.Column(db.Integer, db.ForeignKey('other.other_id'))
 
-    account = db.relationship('Account', backref='budget', lazy=True)
+    accommodation = db.relationship('Accommodation', backref='budget', lazy=True)
     entertainment = db.relationship('Entertainment', backref='budget', lazy=True)
     food = db.relationship('Food', backref='budget', lazy=True)
     transportation = db.relationship('Transportation', backref='budget', lazy=True)
     subscription = db.relationship('Subscription', backref='budget', lazy=True)
     other = db.relationship('Other', backref='budget', lazy=True)
 
-class Account(db.Model):
+class Accommodation(db.Model):
     acc_id = db.Column(db.Integer, primary_key=True)
     acc_budget = db.Column(db.Float, nullable=False)
     acc_current = db.Column(db.Float, nullable=False)

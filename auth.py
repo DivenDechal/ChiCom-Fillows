@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash
 from sqlalchemy.exc import IntegrityError
 from models import (
     db, User, Budget,
-    Account, Entertainment, Food,
+    Accommodation, Entertainment, Food,
     Transportation, Subscription, Other, Savings
 )
 
@@ -59,21 +59,21 @@ def signup_post():
         new_user.set_password(password)
         db.session.add(new_user)
 
-        account       = Account(acc_budget=0.0, acc_current=0.0)
+        accommodation       = Accommodation(acc_budget=0.0, acc_current=0.0)
         entertainment = Entertainment(ent_budget=0.0, ent_current=0.0)
         food          = Food(food_budget=0.0, food_current=0.0)
         transportation= Transportation(trs_budget=0.0, trs_current=0.0)
         subscription  = Subscription(subs_budget=0.0, subs_current=0.0)
         other         = Other(other_budget=0.0, other_current=0.0)
 
-        db.session.add_all([account, entertainment, food,
+        db.session.add_all([accommodation, entertainment, food,
                             transportation, subscription, other])
         db.session.flush()
 
         total_budget = monthly_income
         budget = Budget(
             curr_total_budget=total_budget,
-            account=account,
+            accommodation=accommodation,
             entertainment=entertainment,
             food=food,
             transportation=transportation,

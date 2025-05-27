@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash, jsonify
-from models import db, User, Budget, Account, Entertainment, Food, Transportation, Subscription, Other, SavingsTransaction, Savings
+from models import db, User, Budget, Accommodation, Entertainment, Food, Transportation, Subscription, Other, SavingsTransaction, Savings
 from datetime import datetime
 from functools import wraps
 
@@ -44,17 +44,17 @@ def budget():
     if not user.budget:
         budget = Budget(curr_total_budget=user.income)
         
-        account = Account(acc_budget=0.0, acc_current=0.0)
+        accommodation = accommodation(acc_budget=0.0, acc_current=0.0)
         entertainment = Entertainment(ent_budget=0.0, ent_current=0.0)
         food = Food(food_budget=0.0, food_current=0.0)
         transportation = Transportation(trs_budget=0.0, trs_current=0.0)
         subscription = Subscription(subs_budget=0.0, subs_current=0.0)
         other = Other(other_budget=0.0, other_current=0.0)
         
-        db.session.add_all([account, entertainment, food, transportation, subscription, other])
+        db.session.add_all([accommodation, entertainment, food, transportation, subscription, other])
         db.session.commit()
         
-        budget.account = account
+        budget.accommodation = accommodation
         budget.entertainment = entertainment
         budget.food = food
         budget.transportation = transportation
@@ -71,8 +71,8 @@ def budget():
 
     categories = {
         "Accommodation and Utilities": {
-            "budget": budget.account.acc_budget if budget.account else 0,
-            "current": budget.account.acc_current if budget.account else 0
+            "budget": budget.accommodation.acc_budget if budget.accommodation else 0,
+            "current": budget.accommodation.acc_current if budget.accommodation else 0
         },
         "Entertainment": {
             "budget": budget.entertainment.ent_budget if budget.entertainment else 0,
@@ -111,7 +111,7 @@ def budget():
         category_values=category_values
     )
 
-@BP.route('/savings', methods=['GET'])
+@BP.route('/savings', methods=['GET', 'POST'])
 @login_required_manual
 def savings():
     user = get_current_user()
@@ -119,11 +119,113 @@ def savings():
         return redirect(url_for('BP.login'))
 
     savings = Savings.query.get(user.savings_id) if user.savings_id else None
+    budget = user.budget if user else None
+
+    if request.method == 'POST':
+        action = request.form.get('action')  # 'save' or 'spend'
+        amount = float(request.form.get('amount', 0))
+        detail = request.form.get('detail')
+        date = datetime.now()
+
+        if not savings or not budget:
+            flash("Savings or Budget not set up.", "error")
+            return redirect(url_for('BP.savings'))
+
+        if action == 'save':
+            if budget.curr_total_budget >= amount:
+                budget.curr_total_budget -= amount
+                savings.curr_savings += amount
+
+                new_txn = SavingsTransaction(
+                    savings_id=savings.id,
+                    action='save',
+                    amount=amount,
+                    detail=detail,
+                    date=date
+                )
+                db.session.add(new_txn)
+                db.session.commit()
+                flash("Money saved successfully!", "success")
+            else:
+                flash("Insufficient total budget to save this amount.", "error")
+
+        elif action == 'spend':
+            category = request.form.get('category')
+
+            # Map categories to their respective models and fields
+            category_map = {
+                'Accommodation and Utilities': ('accommodation', 'acc_current'),
+                'Entertainment': ('entertainment', 'ent_current'),
+                'Food': ('food', 'food_current'),
+                'Transportation': ('transportation', 'trs_current'),
+                'Subscription': ('subscription', 'subs_current'),
+                'Others': ('other', 'other_current'),
+            }
+
+            if category not in category_map:
+                flash("Invalid category selected.", "error")
+                return redirect(url_for('BP.savings'))
+
+            rel_name, current_attr = category_map[category]
+            category_obj = getattr(budget, rel_name)
+
+            # Create category record if it doesn't exist
+            if not category_obj:
+                if rel_name == 'accommodation':
+                    category_obj = Accommodation(acc_budget=0, acc_current=0)
+                elif rel_name == 'entertainment':
+                    category_obj = Entertainment(ent_budget=0, ent_current=0)
+                elif rel_name == 'food':
+                    category_obj = Food(food_budget=0, food_current=0)
+                elif rel_name == 'transportation':
+                    category_obj = Transportation(trs_budget=0, trs_current=0)
+                elif rel_name == 'subscription':
+                    category_obj = Subscription(subs_budget=0, subs_current=0)
+                elif rel_name == 'other':
+                    category_obj = Other(other_budget=0, other_current=0)
+                
+                db.session.add(category_obj)
+                db.session.flush()  # Get the ID
+                setattr(budget, f"{rel_name}_id", getattr(category_obj, f"{rel_name}_id"))
+                setattr(budget, rel_name, category_obj)
+
+            # Check if total budget has enough funds
+            if budget.curr_total_budget >= amount:
+                # Deduct from total budget
+                budget.curr_total_budget -= amount
+                
+                # Add to category spending (track as positive)
+                current_value = getattr(category_obj, current_attr)
+                setattr(category_obj, current_attr, current_value + amount)
+                
+                # Update category transaction details
+                category_obj.transaction = f"Spent {amount}"
+                category_obj.detail = detail
+                category_obj.date = date
+
+                # Record savings transaction
+                new_txn = SavingsTransaction(
+                    savings_id=savings.id,
+                    action='spend',
+                    amount=amount,
+                    detail=f"{category}: {detail}" if detail else category,
+                    date=date
+                )
+                db.session.add(new_txn)
+                db.session.commit()
+                flash("Money spent successfully!", "success")
+            else:
+                flash("Insufficient total budget.", "error")
+
+        return redirect(url_for('BP.savings'))
+
+    transactions = SavingsTransaction.query.filter_by(savings_id=savings.id).order_by(SavingsTransaction.date.desc()).all() if savings else []
 
     return render_template(
-    'savings.html',
-    savings=savings,
-    curr_savings=savings.curr_savings if savings else 0,
-    saving_goal=savings.saving_goal if savings and savings.saving_goal else 0,
-    transactions=[]  # <-- avoids error in Jinja template
-)
+        'savings.html',
+        savings=savings,
+        curr_savings=savings.curr_savings if savings else 0,
+        saving_goal=savings.saving_goal if savings and savings.saving_goal else 0,
+        transactions=transactions,
+        budget=budget
+    )

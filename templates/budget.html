@@ -15,74 +15,59 @@
         <li><a onclick="window.location.href= '/savings' ">Savings</a></li>
         <li><a onclick="window.location.href= '/budget' ">Budget</a></li>
         <li><a href="">Debt</a></li>
-        <li><a class="btn btn-primary" onclick="window.location.href= '/login' ">Log in</a></li>
+        <li><a href="{{ url_for('BP_auth.logout') }}" class="log-out">Log Out</a></li>
       </ul>
     </nav>
   </header>
 
   <div class="container">
-    <div class="content">
-      <div class="budget-overview">
-        <div class="chart-container">
-            <canvas id="budgetChart"></canvas>
-            <div id="no-data-message" style="display:none; text-align:center; color:#999; margin-top: 1rem;">
-                No budget data available yet. Add some transactions to see the chart.
-            </div>
-            <div class="total-budget">
-                <p>Total budget</p>
-                <h2>Rp {{ "{:,.2f}".format(total_budget) }}</h2>
-            </div>
-            </div>
+  <div class="content">
+    <div class="budget-overview">
+      <div class="chart-container">
+        <canvas id="budgetChart"></canvas>
+        <div id="no-data-message" style="display:none; text-align:center; color:#999; margin-top: 1rem;">
+          No budget data available yet. Add some transactions to see the chart.
         </div>
-
-        <div class="budget-categories">
-          {% for name, data in categories.items() %}
-            {% set remaining = (data.budget or 0) - (data.current or 0) %}
-            {% if data.budget and data.budget > 0 %}
-              {% set raw_percent = (1 - (data.current / data.budget)) * 100 %}
-            {% else %}
-              {% set raw_percent = 0 %}
-            {% endif %}
-            {% if raw_percent < 0 %}
-              {% set percent = 0 %}
-            {% elif raw_percent > 100 %}
-              {% set percent = 100 %}
-            {% else %}
-              {% set percent = raw_percent %}
-            {% endif %}
-            {% set class_name = name.split()[0].lower() %}
-
-            <div class="category">
-              <div class="category-icon {{ class_name }}-bg">
-                {% if class_name == "accommodation" %}
-                  <i class="fas fa-home"></i>
-                {% elif class_name == "entertainment" %}
-                  <i class="fas fa-film"></i>
-                {% elif class_name == "food" %}
-                  <i class="fas fa-utensils"></i>
-                {% elif class_name == "transportation" %}
-                  <i class="fas fa-car"></i>
-                {% elif class_name == "subscription" %}
-                  <i class="fas fa-calendar-check"></i>
-                {% else %}
-                  <i class="fas fa-ellipsis-h"></i>
-                {% endif %}
-              </div>
-              <div class="category-details">
-                <div class="category-name {{ class_name }}">{{ name }}</div>
-                <div class="category-budget">
-                  Rp {{ "{:,.2f}".format(remaining) }} left out of Rp {{ "{:,.2f}".format(data.budget or 0) }} budget
-                </div>
-                <div class="progress-bar">
-                  <div class="progress {{ class_name }}-bg" style="width: 50%;"></div>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
+        <div class="total-budget">
+          <p>Total budget</p>
+          <h2>Rp {{ "{:,.2f}".format(total_budget) }}</h2>
         </div>
       </div>
     </div>
+
+    <div class="budget-categories">
+      {% for name, data in categories.items() %}
+        {% set spent = data.current or 0 %}
+        {% set class_name = name.split()[0].lower() %}
+
+        <div class="category">
+          <div class="category-icon {{ class_name }}-bg">
+            {% if class_name == "accommodation" %}
+              <i class="fas fa-home"></i>
+            {% elif class_name == "entertainment" %}
+              <i class="fas fa-film"></i>
+            {% elif class_name == "food" %}
+              <i class="fas fa-utensils"></i>
+            {% elif class_name == "transportation" %}
+              <i class="fas fa-car"></i>
+            {% elif class_name == "subscription" %}
+              <i class="fas fa-calendar-check"></i>
+            {% else %}
+              <i class="fas fa-ellipsis-h"></i>
+            {% endif %}
+          </div>
+          <div class="category-details">
+            <div class="category-name {{ class_name }}">{{ name }}</div>
+            <div class="category-budget">
+              Rp {{ "{:,.2f}".format(spent) }} spent
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
+</div>
+
 
   <footer>
     <h3 class="footer-title">Contact Us</h3>
