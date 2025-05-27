@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Fillow - Savings Tracker</title>
-    <link rel="stylesheet" href="/static/saving.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/static/saving.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
 </head>
 <body>
     <div class="container">
         <header>
             <div class="logo">Fillow</div>
             <nav>
-                <a href="budget">Budget</a>
-                <a href="savings" class="active">Saving</a>
+                <a href="{{ url_for('BP.budget') }}">Budget</a>
+                <a href="{{ url_for('BP.savings') }}" class="active">Saving</a>
                 <a href="debt.html">Debt</a>
             </nav>
-            <button class="log-out">Log Out</button>
+            <a href="{{ url_for('BP_auth.logout') }}" class="log-out">Log Out</a>
         </header>
-        
+
         <div class="content">
             <h1 class="savings-title">Your Savings,</h1>
             <div class="savings-amount">
@@ -28,7 +31,7 @@
 
             <div class="transaction-form">
                 <h3>Add Transaction</h3>
-                <form id="transactionForm" method="POST" action="{{ url_for('BP.savings_transaction') }}">
+                <form id="transactionForm" method="POST" action="{{ url_for('BP.savings') }}">
                     <div class="form-group">
                         <label for="transactionType">Transaction Type</label>
                         <select id="transactionType" name="action" required>
@@ -36,31 +39,42 @@
                             <option value="spend">Spend Money</option>
                         </select>
                     </div>
-                    <div class="form-group">
+
+                    <!-- Wrap category select in a div with id to easily hide/show -->
+                    <div class="form-group" id="categoryGroup">
                         <label for="category">Category</label>
                         <select id="category" name="category" required>
-                            <option value="Account Transfer">Account Transfer</option>
                             <option value="Accommodation and Utilities">Accommodation and Utilities</option>
                             <option value="Food and Clothes">Food and Clothes</option>
                             <option value="Transportation">Transportation</option>
                             <option value="Entertainment">Entertainment</option>
                             <option value="Subscription">Subscription</option>
-                            <option value="Debts">Debts</option>
                             <option value="Others">Others</option>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="amount">Amount (Rp)</label>
-                        <input type="number" id="amount" name="amount" placeholder="Enter amount" required min="0" step="0.01">
+                        <input
+                            type="number"
+                            id="amount"
+                            name="amount"
+                            placeholder="Enter amount"
+                            required
+                            min="0.01"
+                            step="0.01"
+                        />
                     </div>
+
                     <div class="form-group">
                         <label for="detail">Detail (optional)</label>
-                        <input type="text" id="detail" name="detail" placeholder="Add description">
+                        <input type="text" id="detail" name="detail" placeholder="Add description" />
                     </div>
+
                     <button type="submit" class="submit-btn">Add Transaction</button>
                 </form>
             </div>
-            
+
             <div class="transaction-section">
                 <h2>Transaction History</h2>
                 <div class="transaction-list" id="transactionList">
@@ -84,7 +98,7 @@
                 </div>
             </div>
         </div>
-        
+
         <footer>
             <div class="footer-content">
                 <h3>Contact Us</h3>
@@ -95,7 +109,7 @@
             </div>
         </footer>
     </div>
-    
+
     <script src="/static/saving.js"></script>
 </body>
 </html>

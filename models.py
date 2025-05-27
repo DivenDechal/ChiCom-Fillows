@@ -94,9 +94,9 @@ class Other(db.Model):
 
 
 class Savings(db.Model):
-    id = db.Column(db.Integer, primary_key=True)  # <-- renamed from savings_trans_id
+    id = db.Column(db.Integer, primary_key=True)
     curr_savings = db.Column(db.Float, nullable=False)
-    transaction = db.Column(db.String(255), nullable=True)
+    saving_goal = db.Column(db.Float, nullable=True)  # <-- New field added
     date = db.Column(db.DateTime, nullable=True)
     detail = db.Column(db.Text, nullable=True)
 

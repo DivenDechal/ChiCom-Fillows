@@ -5,34 +5,22 @@ from sqlalchemy.exc import IntegrityError
 from models import (
     db, User, Budget,
     Account, Entertainment, Food,
-    Transportation, Subscription, Other
+    Transportation, Subscription, Other, Savings
 )
 
 BP_auth = Blueprint('BP_auth', __name__)
-
-# @BP_auth.route('/check-email', methods=['POST'])
-# def check_email():
-#     data = request.get_json()
-#     email = data.get('email')
-    
-#     if not email:
-#         return jsonify({'error': 'Email is required'}), 400
-    
-#     user = User.query.filter_by(email=email).first()
-#     return jsonify({'exists': user is not None})
 
 @BP_auth.route('/signin', methods=['POST'])
 def signin_post():
     email = request.form.get('email')
     password = request.form.get('password')
-    
+
     user = User.query.filter_by(email=email).first()
-    
+
     if not user or not user.check_password(password):
         flash('Invalid email or password', 'error')
         return redirect(url_for('BP.login'))
-    
-    # Create user session
+
     session['user_id'] = user.id
     return redirect(url_for('BP.savings'))
 
@@ -51,7 +39,6 @@ def signup_post():
         monthly_income = float(request.form.get('monthly_income', 0))
         saving_percentage = int(request.form.get('saving_percentage', 0))
 
-        # Basic validations
         if password != confirm_password:
             flash('Passwords do not match', 'error')
             return redirect(url_for('BP.signup'))
@@ -63,7 +50,6 @@ def signup_post():
             flash('Username already exists', 'error')
             return redirect(url_for('BP.signup'))
 
-        # 1️⃣ Create the User (but don’t commit yet)
         new_user = User(
             username=username,
             email=email,
@@ -73,7 +59,6 @@ def signup_post():
         new_user.set_password(password)
         db.session.add(new_user)
 
-        # 2️⃣ Create all category records with 0 balances
         account       = Account(acc_budget=0.0, acc_current=0.0)
         entertainment = Entertainment(ent_budget=0.0, ent_current=0.0)
         food          = Food(food_budget=0.0, food_current=0.0)
@@ -83,10 +68,9 @@ def signup_post():
 
         db.session.add_all([account, entertainment, food,
                             transportation, subscription, other])
-        db.session.flush()  # assign IDs to each
+        db.session.flush()
 
-        # 3️⃣ Create the Budget and link the categories
-        total_budget = monthly_income * (1 - saving_percentage / 100.0)
+        total_budget = monthly_income
         budget = Budget(
             curr_total_budget=total_budget,
             account=account,
@@ -97,10 +81,16 @@ def signup_post():
             other=other
         )
         db.session.add(budget)
-        db.session.flush()  # assign budget_id
+        db.session.flush()
 
-        # 4️⃣ Link the budget to the user and commit everything
         new_user.budget_id = budget.budget_id
+
+        savings_goal = monthly_income * (saving_percentage / 100.0)
+        savings = Savings(curr_savings=0.0, saving_goal=savings_goal)
+        db.session.add(savings)
+        db.session.flush()
+        new_user.savings_id = savings.id
+
         db.session.commit()
 
         flash('Account created successfully! Please log in.', 'success')
