@@ -38,7 +38,10 @@ def savings() :
             transaction = request.form.get("transactionType")
             date = datetime.now(tz = "id")
             detail = request.form.get("category")
+            # user_id = session['user_id']
+            
             print(curr_savings, transaction,date, detail)
+            # print(user_id)
             
 
 
@@ -47,13 +50,14 @@ def savings() :
                 transaction = transaction,
                 detail = detail,
                 date = date
+                # user_id = user_id
             )
 
             db.session.add(add_transaction)
             db.session.commit()
             print("new transaction added!")
             return render_template('savings.html)
-            
+            # return render_template('BP.savings',data=curr_savings)
 
         except Exception as e:
             print("error add transaction")
