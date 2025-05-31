@@ -5,39 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fillow - Budget Tracker</title>
     <link rel="stylesheet" href="/static/budget.css">
-    <!-- <link rel="stylesheet" href="/static/main.css"> -->
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-  <!-- Navbar -->
-  <header>
-    <nav class="navbar">
-      <div class="logo" onclick="window.location.href= '/' ">Fillow</div>
-        <span></span>
-      </label>
-      <ul class="nav-menu">
-        <li><a onclick="window.location.href= '/saving' ">Savings</a></li>
-        <li><a onclick="window.location.href= '/budget' ">Budget</a></li>
-        <li><a href="">Debt</a></li>
-        <li><a class="btn btn-primary" onclick="window.location.href= '/login' ">Log in</a></li>
-      </ul>
-    </nav>
-  </header>
-  <!-- ... rest of your budget page ... -->
-
-
-
     <div class="container">
-        <!-- <header>
-            <div class="logo">Fillow</div>
-            <button class="log-out">Log Out</button>
+        <header>
+            <a href="/" class="logo">FillUps</a>
+            <nav>
+                <a href="/budget" class="active">Budget</a>
+                <a href="/saving">Savings</a>
+                <a href="debt.html">Debt</a>
+            </nav>
+            <a href="/account" class="account-icon" title="Account">
+                <i class="fas fa-user"></i>
+            </a>
         </header>
-        
-        <nav>
-            <a href="#" class="active">Budget</a>
-            <a href="#">Saving</a>
-            <a href="#">Debt</a> -->
-        <!-- </nav> -->
         
         <div class="content">
             <div class="budget-overview">
@@ -48,80 +30,124 @@
                         <h2>Rp 15,000,000.00</h2>
                     </div>
                 </div>
-                
                 <div class="budget-categories">
-                    <div class="category">
+                    <!-- Example for one category, repeat for all categories as needed -->
+                    <div class="category" data-category="accommodation">
                         <div class="category-icon accommodation-bg">
                             <i class="fas fa-home"></i>
                         </div>
                         <div class="category-details">
-                            <div class="category-name accommodation">Accommodation and Utilities</div>
-                            <div class="category-budget">Rp 6,000,000.00 left out of Rp 6,000,000.00 budget</div>
+                            <div class="category-header-row">
+                                <div>
+                                    <div class="category-name accommodation">Accommodation and Utilities</div>
+                                    <div class="category-budget">Rp 6,000,000.00 left out of Rp 6,000,000.00 budget</div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="add-btn" data-category="accommodation"><i class="fas fa-plus"></i> Add</button>
+                                    <button class="view-btn" data-category="accommodation"><i class="fas fa-eye"></i> View</button>
+                                </div>
+                            </div>
                             <div class="progress-bar">
                                 <div class="progress accommodation-bg" style="width: 100%"></div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="category">
+                    <!-- Repeat the block below for each category, updating class names and data-category -->
+                    <div class="category" data-category="entertainment">
                         <div class="category-icon entertainment-bg">
                             <i class="fas fa-film"></i>
                         </div>
                         <div class="category-details">
-                            <div class="category-name entertainment">Entertainment</div>
-                            <div class="category-budget">Rp 1,000,000.00 left out of Rp 1,500,000.00 budget</div>
+                            <div class="category-header-row">
+                                <div>
+                                    <div class="category-name entertainment">Entertainment</div>
+                                    <div class="category-budget">Rp 1,000,000.00 left out of Rp 1,500,000.00 budget</div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="add-btn" data-category="entertainment"><i class="fas fa-plus"></i> Add</button>
+                                    <button class="view-btn" data-category="entertainment"><i class="fas fa-eye"></i> View</button>
+                                </div>
+                            </div>
                             <div class="progress-bar">
                                 <div class="progress entertainment-bg" style="width: 66.67%"></div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="category">
+                    <div class="category" data-category="food">
                         <div class="category-icon food-bg">
                             <i class="fas fa-utensils"></i>
                         </div>
                         <div class="category-details">
-                            <div class="category-name food">Food and Clothes</div>
-                            <div class="category-budget">Rp 2,000,000.00 left out of Rp 3,000,000.00 budget</div>
+                            <div class="category-header-row">
+                                <div>
+                                    <div class="category-name food">Food and Clothes</div>
+                                    <div class="category-budget">Rp 2,000,000.00 left out of Rp 3,000,000.00 budget</div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="add-btn" data-category="food"><i class="fas fa-plus"></i> Add</button>
+                                    <button class="view-btn" data-category="food"><i class="fas fa-eye"></i> View</button>
+                                </div>
+                            </div>
                             <div class="progress-bar">
                                 <div class="progress food-bg" style="width: 66.67%"></div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="category">
+                    <div class="category" data-category="transportation">
                         <div class="category-icon transportation-bg">
                             <i class="fas fa-car"></i>
                         </div>
                         <div class="category-details">
-                            <div class="category-name transportation">Transportation</div>
-                            <div class="category-budget">Rp 750,000.00 left out of Rp 2,250,000.00 budget</div>
+                            <div class="category-header-row">
+                                <div>
+                                    <div class="category-name transportation">Transportation</div>
+                                    <div class="category-budget">Rp 750,000.00 left out of Rp 2,250,000.00 budget</div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="add-btn" data-category="transportation"><i class="fas fa-plus"></i> Add</button>
+                                    <button class="view-btn" data-category="transportation"><i class="fas fa-eye"></i> View</button>
+                                </div>
+                            </div>
                             <div class="progress-bar">
                                 <div class="progress transportation-bg" style="width: 33.33%"></div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="category">
+                    <div class="category" data-category="subscription">
                         <div class="category-icon subscription-bg">
                             <i class="fas fa-calendar-check"></i>
                         </div>
                         <div class="category-details">
-                            <div class="category-name subscription">Subscription</div>
-                            <div class="category-budget">Rp 500,000.00 left out of Rp 1,500,000.00 budget</div>
+                            <div class="category-header-row">
+                                <div>
+                                    <div class="category-name subscription">Subscription</div>
+                                    <div class="category-budget">Rp 500,000.00 left out of Rp 1,500,000.00 budget</div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="add-btn" data-category="subscription"><i class="fas fa-plus"></i> Add</button>
+                                    <button class="view-btn" data-category="subscription"><i class="fas fa-eye"></i> View</button>
+                                </div>
+                            </div>
                             <div class="progress-bar">
                                 <div class="progress subscription-bg" style="width: 33.33%"></div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="category">
+                    <div class="category" data-category="others">
                         <div class="category-icon others-bg">
                             <i class="fas fa-ellipsis-h"></i>
                         </div>
                         <div class="category-details">
-                            <div class="category-name others">Others</div>
-                            <div class="category-budget">Rp 250,000.00 left out of Rp 750,000.00 budget</div>
+                            <div class="category-header-row">
+                                <div>
+                                    <div class="category-name others">Others</div>
+                                    <div class="category-budget">Rp 250,000.00 left out of Rp 750,000.00 budget</div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="add-btn" data-category="others"><i class="fas fa-plus"></i> Add</button>
+                                    <button class="view-btn" data-category="others"><i class="fas fa-eye"></i> View</button>
+                                </div>
+                            </div>
                             <div class="progress-bar">
                                 <div class="progress others-bg" style="width: 33.33%"></div>
                             </div>
@@ -130,21 +156,48 @@
                 </div>
             </div>
         </div>
-        
-        <footer>
-            <h3 class="footer-title">Contact Us</h3>
-            <div class="contact-info">
-                <p><i class="fas fa-phone"></i> Call Us: +62 811-227-336</p>
-                <p><i class="fas fa-map-marker-alt"></i> Location: Binus Alam Sutera</p>
-            </div>
-        </footer>
-    </div>
 
-    <!-- Font Awesome CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+        <!-- Modals -->
+        <div id="addModal" class="modal">
+            <div class="modal-content">
+                <h3>Add Transaction</h3>
+                <form id="addTransactionForm">
+                    <input type="hidden" id="addCategory" name="category">
+                    <div class="form-group">
+                        <label for="transactionDetail">Detail</label>
+                        <input type="text" id="transactionDetail" name="detail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionCost">Cost (Rp)</label>
+                        <input type="number" id="transactionCost" name="cost" min="0" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-secondary" id="closeAddModal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="viewModal" class="modal">
+            <div class="modal-content">
+                <h3>Transaction History</h3>
+                <div id="transactionList" class="transaction-history-list"></div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="closeViewModal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer is OUTSIDE the .container for full-width -->
+    <footer>
+        <h3 class="footer-title">Contact Us</h3>
+        <div class="contact-info">
+            <p><i class="fas fa-phone"></i> Call Us: +62 811-227-336</p>
+            <p><i class="fas fa-map-marker-alt"></i> Location: Binus Alam Sutera</p>
+        </div>
+    </footer>
     <!-- Chart.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    
     <script src="/static/budget.js"></script>
 </body>
 </html>

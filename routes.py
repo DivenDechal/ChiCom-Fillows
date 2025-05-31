@@ -24,3 +24,7 @@ def saving():
     if 'user_id' not in session:
         return redirect(url_for('BP.login'))
     return render_template('savings.html')
+
+@BP.route('/account')
+def account():
+    return render_template('account.html')
