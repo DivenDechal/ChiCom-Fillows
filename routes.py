@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for
+from flask import Blueprint, render_template, session, redirect, url_for, request
 from datetime import datetime
 from models import Savings, db
 
@@ -34,9 +34,9 @@ def savings() :
 
     if request.method == 'POST':
         try:
-            curr_savings = float(request.form.get("amount")
+            curr_savings = float(request.form.get("amount"))
             transaction = request.form.get("transactionType")
-            date = datetime.now(tz = "id")
+            date = datetime.now()
             detail = request.form.get("category")
             # user_id = session['user_id']
             
@@ -56,7 +56,7 @@ def savings() :
             db.session.add(add_transaction)
             db.session.commit()
             print("new transaction added!")
-            return render_template('savings.html)
+            return render_template('savings.html')
             # return render_template('BP.savings',data=curr_savings)
 
         except Exception as e:
