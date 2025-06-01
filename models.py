@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 db = SQLAlchemy()
 
@@ -11,9 +13,17 @@ class User(db.Model):
     splitting = db.Column(db.Integer, nullable=False)
     savings_id = db.Column(db.Integer, db.ForeignKey('savings.savings_trans_id'))
     budget_id = db.Column(db.Integer, db.ForeignKey('budget.budget_id'))
+    def set_password(self, password):
+         self.password = generate_password_hash(password)
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    
 
     savings = db.relationship('Savings', backref='user', lazy=True)
     budget = db.relationship('Budget', backref='user', lazy=True)
+
+    
 
 class Budget(db.Model):
     budget_id = db.Column(db.Integer, primary_key=True)

@@ -62,7 +62,7 @@
   .navbar .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--primary);
+    color: var(--light);
   }
   .nav-menu {
     list-style: none;
@@ -75,38 +75,11 @@
     font-weight: 500;
     transition: color 0.3s;
   }
+
   .nav-menu li a:hover {
     color: var(--primary);
   }
-  .nav-toggle {
-    display: none;
-  }
-  .nav-toggle-label {
-    display: none;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-  }
-  .nav-toggle-label span,
-  .nav-toggle-label span::before,
-  .nav-toggle-label span::after {
-    display: block;
-    background: var(--primary);
-    height: 3px;
-    width: 25px;
-    border-radius: 2px;
-    position: relative;
-  }
-  .nav-toggle-label span::before {
-    content: "";
-    position: absolute;
-    top: -8px;
-  }
-  .nav-toggle-label span::after {
-    content: "";
-    position: absolute;
-    top: 8px;
-  }
+  
   
   /* Buttons */
   .btn {
@@ -128,18 +101,9 @@
     background: #d32f2f;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-  .btn-secondary {
-    background: #fff;
-    color: var(--primary);
-    border: 2px solid var(--primary);
-  }
-  .btn-secondary:hover {
-    transform: translateY(-2px);
-    background: var(--accent);
     color: #fff;
-    border-color: var(--accent);
   }
+
   
   /* Hero Section */
   .hero {
@@ -201,7 +165,8 @@
   
   /* Analytics Section */
   .analytics {
-    padding: 4rem 0;
+    padding: 12rem 0;
+    padding-top: 0;
   }
   .analytics h2 {
     text-align: center;
@@ -233,12 +198,6 @@
     color: var(--primary);
     border-color: #fff;
     box-shadow: none;
-  }
-  .cta .btn-secondary:hover {
-    transform: translateY(-2px);
-    background: var(--accent);
-    color: #fff;
-    border-color: transparent;
   }
   
   /* Footer */

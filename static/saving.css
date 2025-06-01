@@ -39,44 +39,63 @@ header {
 .logo {
     font-size: 24px;
     font-weight: bold;
+    color: white;
+    text-decoration: none;
 }
 
 nav {
     display: flex;
     margin-left: auto;
     margin-right: 20px;
+    gap: 25px; /* Increased spacing between buttons */
 }
 
 nav a {
     color: white;
     text-decoration: none;
-    padding: 10px 20px;
+    padding: 12px 25px; /* Increased padding for better button appearance */
     font-weight: 500;
     transition: all 0.3s ease;
+    border-radius: 15px; /* Added curved edges */
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle background for all buttons */
+    border: 2px solid transparent; /* For smooth hover transition */
 }
 
 nav a.active {
     background-color: #0f3a82;
-    border-bottom: 3px solid #ffd54f;
+    border-bottom: 3px solid #ffffff;
+    border-radius: 15px; /* Keep curved edges for active state */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow for active button */
 }
 
 nav a:hover:not(.active) {
     background-color: #0f3a82;
+    border-radius: 15px; /* Curved edges on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow on hover */
 }
 
-.log-out {
-    background-color: #2d7ae5;
+.account-icon {
+    background-color: rgba(255, 255, 255, 0.1);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px;
+    border-radius: 50%; /* Make it circular */
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
 }
 
-.log-out:hover {
-    background-color: #1c5db9;
+.account-icon:hover {
+    background-color: #0f3a82;
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Content Area Styles */
@@ -244,6 +263,11 @@ footer {
         margin: 15px 0;
         width: 100%;
         justify-content: center;
+        gap: 15px; /* Reduced gap for mobile */
+    }
+    
+    nav a {
+        padding: 10px 20px; /* Adjusted padding for mobile */
     }
     
     .savings-amount {

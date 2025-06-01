@@ -1,7 +1,6 @@
 /**
  * Budget Tracker JavaScript
  * Fillow Application
- * Filename: /static/budget.js
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -39,9 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             responsive: true,
             maintainAspectRatio: true,
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -65,20 +62,99 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add click functionality to navigation
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
+    // ---------------------------
+    // CATEGORY TRANSACTIONS FEATURE
+    // ---------------------------
+    // In-memory storage for transactions by category
+    const transactions = {
+        accommodation: [],
+        entertainment: [],
+        food: [],
+        transportation: [],
+        subscription: [],
+        others: []
+    };
+
+    // Helper to get modal elements
+    const addModal = document.getElementById('addModal');
+    const viewModal = document.getElementById('viewModal');
+    const closeAddModalBtn = document.getElementById('closeAddModal');
+    const closeViewModalBtn = document.getElementById('closeViewModal');
+    const addTransactionForm = document.getElementById('addTransactionForm');
+    const transactionList = document.getElementById('transactionList');
+    const addCategoryInput = document.getElementById('addCategory');
+
+    // Open Add Transaction modal
+    document.querySelectorAll('.add-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const category = this.getAttribute('data-category');
+            addCategoryInput.value = category;
+            addTransactionForm.reset();
+            addModal.classList.add('active');
+            setTimeout(() => document.getElementById('transactionDetail').focus(), 200);
         });
     });
 
-    // Log out button functionality
-    const logOutBtn = document.querySelector('.log-out');
-    logOutBtn.addEventListener('click', function() {
-        alert('Logging out...');
-        // In a real application, this would redirect to a logout endpoint
+    // Open View Transactions modal
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const category = this.getAttribute('data-category');
+            showTransactionHistory(category);
+            viewModal.classList.add('active');
+        });
+    });
+
+    // Add Transaction logic
+    addTransactionForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const cat = addCategoryInput.value;
+        const detail = document.getElementById('transactionDetail').value.trim();
+        const cost = Number(document.getElementById('transactionCost').value);
+        if (!detail || isNaN(cost)) return;
+
+        if (!transactions[cat]) transactions[cat] = [];
+        transactions[cat].push({ detail, cost, time: new Date() });
+
+        alert('Transaction added!');
+        addModal.classList.remove('active');
+    });
+
+    // Show transaction history for a category
+    function showTransactionHistory(category) {
+    const container = document.getElementById('transactionList');
+    container.innerHTML = '';
+    if (transactions[category] && transactions[category].length > 0) {
+        transactions[category].forEach(tr => {
+            const card = document.createElement('div');
+            card.className = 'transaction-history-card';
+
+            // Transaction title/desc
+            const title = document.createElement('div');
+            title.className = 'history-title';
+            title.textContent = tr.detail;
+
+            // Transaction amount (no color, formatted)
+            const amount = document.createElement('div');
+            amount.className = 'history-amount';
+            amount.textContent = 'Rp ' + tr.cost.toLocaleString('id-ID');
+
+            card.appendChild(title);
+            card.appendChild(amount);
+            container.appendChild(card);
+        });
+    } else {
+        container.innerHTML = '<div class="transaction-history-card">No transactions yet.</div>';
+    }
+}
+
+
+    // Modal close buttons
+    closeAddModalBtn.onclick = () => addModal.classList.remove('active');
+    closeViewModalBtn.onclick = () => viewModal.classList.remove('active');
+
+    // Close modal when clicking outside modal-content
+    window.addEventListener('mousedown', function(e) {
+        if (e.target === addModal) addModal.classList.remove('active');
+        if (e.target === viewModal) viewModal.classList.remove('active');
     });
 });
