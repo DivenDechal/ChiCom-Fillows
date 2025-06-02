@@ -58,7 +58,7 @@ def perform_monthly_updates():
             ))
 
         # Update total budget
-        budget.curr_total_budget += budget_amount
+        budget.curr_total_budget = budget_amount
 
         # Reset current category spending
         budget.accommodation.acc_current = 0
