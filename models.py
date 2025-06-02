@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -100,4 +100,15 @@ class Savings(db.Model):
     date = db.Column(db.DateTime, nullable=True)
     detail = db.Column(db.Text, nullable=True)
 
+
+
+class Transaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    type = db.Column(db.String(10), nullable=False)  # 'save' or 'spend'
+    category = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='transactions')
 
