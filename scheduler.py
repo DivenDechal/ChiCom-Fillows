@@ -34,18 +34,18 @@ def perform_monthly_updates():
 
         # Calculate unused budget from all categories
         budget = user.budget
-        leftover = 0
+        leftover = budget.curr_total_budget
 
-        try:
-            leftover += budget.accommodation.acc_budget - budget.accommodation.acc_current
-            leftover += budget.entertainment.ent_budget - budget.entertainment.ent_current
-            leftover += budget.food.food_budget - budget.food.food_current
-            leftover += budget.transportation.trs_budget - budget.transportation.trs_current
-            leftover += budget.subscription.subs_budget - budget.subscription.subs_current
-            leftover += budget.other.other_budget - budget.other.other_current
-        except AttributeError:
+     #   try:
+     #       leftover += budget.accommodation.acc_budget - budget.accommodation.acc_current
+     #       leftover += budget.entertainment.ent_budget - budget.entertainment.ent_current
+     #       leftover += budget.food.food_budget - budget.food.food_current
+     #       leftover += budget.transportation.trs_budget - budget.transportation.trs_current
+     #       leftover += budget.subscription.subs_budget - budget.subscription.subs_current
+     #       leftover += budget.other.other_budget - budget.other.other_current
+     #   except AttributeError:
             # Skip users with incomplete subcategories
-            continue
+     #       continue
 
         if leftover > 0:
             user.savings.curr_savings += leftover
