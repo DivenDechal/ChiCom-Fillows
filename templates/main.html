@@ -9,33 +9,18 @@
 </head>
 <body>
   <!-- Navbar -->
-  <!-- <header>
+  <header>
     <nav class="navbar">
-      <a class="logo" href= '/' >FillUps</a>
-      <input type="checkbox" id="nav-toggle" class="nav-toggle">
-      <label for="nav-toggle" class="nav-toggle-label">
-        <span></span>
-      </label>
+      <div class="logo" onclick="window.location.href= '/' ">Fillup</div>
+      
       <ul class="nav-menu">
-        <a href="#features">Features</a>
-        <a href='/saving' >Savings</a>
-        <a href='/budget' >Budget</a>
-        <a href="">Debt</a>
-        <a class="btn btn-primary" onclick="window.location.href= '/login' ">Log in</a>
+        <li><a id="feature" href="#features">Features</a></li>
+        <li><a id="analytic" href="#analytics">Analytics</a></li>
+        <a class="btn btn-primary" href= '/login' ">Log in</a>
       </ul>
     </nav>
-  </header> -->
-   <header>
-            <a href="/" class="logo">FillUps</a>
-            <nav>
-                <a href="/budget">Budget</a>
-                <a href="/saving" class="active">Savings</a>
-                <a href="debt.html">Debt</a>
-            </nav>
-            <button class="account-icon" title="Account">
-                <i class="fas fa-user"></i>
-            </button>
-        </header>
+  </header>
+
 
   <main>
     <!-- Hero Section -->
@@ -43,7 +28,7 @@
       <div class="hero-content">
         <h1>Manage Your Finances with Confidence</h1>
         <p>Stay on top of your budget, track expenses, and reach your financial goals all in one place.</p>
-        <a onclick="window.location.href= '/signup' " class="btn btn-primary">Get Started</a>
+        <a href= '/signup' " class="btn btn-primary">Get Started</a>
       </div>
     </section>
 
@@ -69,7 +54,7 @@
     </section>
 
     <!-- Analytics Section -->
-    <section class="analytics">
+    <section id="analytics" class="analytics">
       <div class="container">
         <img src="colorful-budget-allocation-pie-chart-template-design-214cd8acd8ebc2ffd3fcc47a10a38c5a_screen.jpg" alt="" style="max-width: 100%; height: auto; margin-left: 20%; margin-bottom: 100px;">
         <h2>Analytics</h2>
@@ -94,7 +79,7 @@
     <section class="cta">
       <div class="container">
         <h2>Ready to take control of your finances?</h2>
-        <a onclick="window.location.href= '/signup' " class="btn btn-secondary">Sign Up Now</a>
+        <a href= '/signup' " class="btn btn-primary">Sign Up Now</a>
       </div>
     </section>
   </main>

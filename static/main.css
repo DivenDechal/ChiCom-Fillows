@@ -47,7 +47,7 @@
   }
   
   /* Navbar */
-  /* .navbar {
+  .navbar {
     position: fixed;
     top: 0;
     width: 100%;
@@ -62,7 +62,7 @@
   .navbar .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #f9f9f9;
+    color: var(--light);
   }
   .nav-menu {
     list-style: none;
@@ -75,87 +75,12 @@
     font-weight: 500;
     transition: color 0.3s;
   }
+
   .nav-menu li a:hover {
     color: var(--primary);
   }
-  .nav-toggle {
-    display: none;
-  }
-  .nav-toggle-label {
-    display: none;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-  }
-  .nav-toggle-label span,
-  .nav-toggle-label span::before,
-  .nav-toggle-label span::after {
-    display: block;
-    background: var(--primary);
-    height: 3px;
-    width: 25px;
-    border-radius: 2px;
-    position: relative;
-  }
-  .nav-toggle-label span::before {
-    content: "";
-    position: absolute;
-    top: -8px;
-  }
-  .nav-toggle-label span::after {
-    content: "";
-    position: absolute;
-    top: 8px;
-  }
-   */
-
-   header {
-    background-color: #1a56bb;
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
-}
-
-nav {
-    display: flex;
-    margin-left: auto;
-    margin-right: 20px;
-    gap: 25px; /* Increased spacing between buttons */
-}
-
-nav a {
-    color: white;
-    text-decoration: none;
-    padding: 12px 25px; /* Increased padding for better button appearance */
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border-radius: 15px; /* Added curved edges */
-    background-color: rgba(255, 255, 255, 0.1); /* Subtle background for all buttons */
-    border: 2px solid transparent; /* For smooth hover transition */
-}
-
-nav a.active {
-    background-color: #0f3a82;
-    border-bottom: 3px solid #ffffff;
-    border-radius: 15px; /* Keep curved edges for active state */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow for active button */
-}
-
-nav a:hover:not(.active) {
-    background-color: #0f3a82;
-    border-radius: 15px; /* Curved edges on hover */
-    transform: translateY(-2px); /* Slight lift effect on hover */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow on hover */
-}
+  
+  
   /* Buttons */
   .btn {
     display: inline-block;
@@ -176,18 +101,9 @@ nav a:hover:not(.active) {
     background: #d32f2f;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-  .btn-secondary {
-    background: #fff;
-    color: var(--primary);
-    border: 2px solid var(--primary);
-  }
-  .btn-secondary:hover {
-    transform: translateY(-2px);
-    background: var(--accent);
     color: #fff;
-    border-color: var(--accent);
   }
+
   
   /* Hero Section */
   .hero {
@@ -249,7 +165,8 @@ nav a:hover:not(.active) {
   
   /* Analytics Section */
   .analytics {
-    padding: 4rem 0;
+    padding: 12rem 0;
+    padding-top: 0;
   }
   .analytics h2 {
     text-align: center;
@@ -281,12 +198,6 @@ nav a:hover:not(.active) {
     color: var(--primary);
     border-color: #fff;
     box-shadow: none;
-  }
-  .cta .btn-secondary:hover {
-    transform: translateY(-2px);
-    background: var(--accent);
-    color: #fff;
-    border-color: transparent;
   }
   
   /* Footer */
