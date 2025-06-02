@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request, flash, jsonify
-from models import db, User
+from flask import Blueprint, render_template, session, redirect, url_for, request, flash
+from models import db, User, Savings
 from werkzeug.security import generate_password_hash
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 BP = Blueprint('BP', __name__)
 
@@ -26,6 +27,27 @@ def budget():
 def saving():
     if 'user_id' not in session:
         return redirect(url_for('BP.login'))
+
+    user = User.query.get(session['user_id'])
+    now = datetime.utcnow()
+
+    last_saving = Savings.query.filter_by(user_id=user.id).order_by(Savings.date.desc()).first()
+    already_added = last_saving and last_saving.date.year == now.year and last_saving.date.month == now.month
+
+    if not already_added:
+        increment = user.income * (user.splitting / 100)
+        curr_savings = last_saving.curr_savings if last_saving else 0
+
+        new_savings = Savings(
+            curr_savings=curr_savings + increment,
+            transaction="Auto Monthly Transfer",
+            date=now,
+            detail=f"Monthly auto-saving for {now.strftime('%B %Y')}",
+            user_id=user.id
+        )
+        db.session.add(new_savings)
+        db.session.commit()
+
     return render_template('savings.html')
 
 @BP.route('/account')
