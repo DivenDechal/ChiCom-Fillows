@@ -223,7 +223,7 @@ nav a:hover:not(.active) {
     background: #0f3a82;
 }
 .add-btn {
-    background: #4caf50;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: #fff;
 }
 .add-btn:hover {
@@ -402,30 +402,31 @@ input[type=number] {
 
 /* Footer Styles */
 footer {
-    width: 100%;
     background-color: #1a56bb;
     color: white;
     padding: 30px 50px;
     margin-top: auto;
-    position: relative;
-    left: 0;
-    bottom: 0;
 }
-.footer-title {
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 ;
+}
+
+.footer-content h3 {
     margin-bottom: 15px;
-    font-size: 1.5rem;
-    font-weight: bold;
 }
+
 .contact-info p {
     margin: 8px 0;
     display: flex;
     align-items: center;
-    font-size: 1.2rem;
 }
+
 .contact-info i {
     margin-right: 10px;
-    font-size: 1.3rem;
 }
+
 
 /* Responsive Styles */
 @media (max-width: 768px) {

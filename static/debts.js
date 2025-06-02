@@ -1,90 +1,130 @@
-document.addEventListener('DOMContentLoaded', function() {
-    let loanData = {
-        loans: []
-    };
+// debt.js
+class LoanTracker {
+    constructor() {
+        this.loans = [];
+        this.initializeEventListeners();
+        this.renderLoans();
+    }
 
-    function formatCurrency(amount) {
-        return 'Rp ' + amount.toLocaleString('id-ID', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
+    initializeEventListeners() {
+        const form = document.getElementById('loanForm');
+        form.addEventListener('submit', (e) => this.handleSubmit(e));
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        const amount = document.getElementById('loanAmount').value.replace(/\D/g, '');
+        const details = document.getElementById('loanDetails').value;
+        const rate = parseFloat(document.getElementById('interestRate').value);
+
+        if (amount && details && rate >= 0) {
+            const loan = {
+                id: Date.now(),
+                amount: parseInt(amount),
+                details: details.trim(),
+                interestRate: rate,
+                dateAdded: new Date().toLocaleDateString('id-ID')
+            };
+            this.loans.push(loan);
+            this.renderLoans();
+            e.target.reset();
+        }
+    }
+
+    renderLoans() {
+        const loanList = document.getElementById('loanList');
+        if (this.loans.length === 0) {
+            loanList.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-piggy-bank"></i>
+                    <h3>No loans yet</h3>
+                    <p>Add your first loan to start tracking your debts</p>
+                </div>
+            `;
+            return;
+        }
+        const totalDebt = this.loans.reduce((sum, loan) => sum + loan.amount, 0);
+        loanList.innerHTML = `
+            <div class="transaction-item" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #dc2626;">
+                <div class="transaction-details">
+                    <div class="transaction-category">Total Debt</div>
+                    <div class="transaction-meta">Across ${this.loans.length} loan${this.loans.length > 1 ? 's' : ''}</div>
+                </div>
+                <div class="transaction-amount" style="color: #dc2626; font-size: 20px;">
+                    Rp ${totalDebt.toLocaleString('id-ID')}
+                </div>
+            </div>
+            ${this.loans.map(loan => this.renderLoanItem(loan)).join('')}
+        `;
+        // Attach toggle and calculation listeners
+        this.loans.forEach(loan => {
+            document.getElementById(`toggle-btn-${loan.id}`).onclick = () => this.toggleCalculator(loan.id);
+            document.getElementById(`calc-btn-${loan.id}`).onclick = () => this.calculateLoan(loan.id, loan.amount, loan.interestRate);
+            document.getElementById(`delete-btn-${loan.id}`).onclick = () => this.deleteLoan(loan.id);
         });
     }
 
-    function createLoanElement(loan, index) {
-        const loanItem = document.createElement('div');
-        loanItem.className = "transaction-item expense";
-        loanItem.innerHTML = `
-            <div class="transaction-details" style="display: flex; flex-direction: column;">
-                <div>
+    renderLoanItem(loan) {
+        return `
+            <div class="transaction-item">
+                <div class="transaction-details">
                     <div class="transaction-category">${loan.details}</div>
-                    <div class="loan-details">${formatCurrency(loan.amount)} (${loan.interest}% interest)</div>
-                    <button class="submit-btn" style="width:auto; padding:6px 12px; font-size:14px; margin-top:8px;" data-index="${index}">Calculate</button>
-                </div>
-                <div class="loan-calc-anim">
-                    <div class="loan-calc-content">
-                        <label>Months to pay: 
-                            <input type="number" class="months-input" min="1" value="12" style="width:60px; margin-left:10px;">
-                        </label>
-                        <button class="submit-btn calc-monthly-btn" style="width:auto; padding:4px 10px; font-size:13px; margin-left:8px;">Calculate Monthly</button>
+                    <div class="transaction-meta">
+                        ${loan.interestRate}% annual interest • Added ${loan.dateAdded}
                     </div>
-                    <div class="monthly-result"></div>
+                    <div class="loan-calc-anim" id="calc-${loan.id}">
+                        <div class="loan-calc-content">
+                            <span>Calculate for</span>
+                            <input type="number" id="months-${loan.id}" placeholder="12" min="1" max="360" value="12">
+                            <span>months</span>
+                            <button id="calc-btn-${loan.id}">
+                                Calculate
+                            </button>
+                        </div>
+                        <div class="monthly-result" id="result-${loan.id}"></div>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                    <div class="transaction-amount">
+                        Rp ${loan.amount.toLocaleString('id-ID')}
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button id="toggle-btn-${loan.id}" 
+                                style="background: #1a56bb; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.3s ease;">
+                            <i class="fas fa-calculator"></i> Calculate
+                        </button>
+                        <button id="delete-btn-${loan.id}" 
+                                style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.3s ease;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
-        return loanItem;
     }
 
-
-    function updateLoanList() {
-        const loanList = document.getElementById('loanList');
-        loanList.innerHTML = '';
-        loanData.loans.forEach((loan, idx) => {
-            const el = createLoanElement(loan, idx);
-            loanList.appendChild(el);
-        });
-
-        // Accordion Animation logic
-        document.querySelectorAll('.submit-btn[data-index]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const loanItem = this.closest('.transaction-item');
-                const calcDiv = loanItem.querySelector('.loan-calc-anim');
-                // Close others if you want only one open at a time (optional)
-                document.querySelectorAll('.loan-calc-anim.open').forEach(openDiv => {
-                    if (openDiv !== calcDiv) openDiv.classList.remove('open');
-                });
-                // Toggle current
-                calcDiv.classList.toggle('open');
-            });
-        });
-
-        document.querySelectorAll('.calc-monthly-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const loanItem = this.closest('.transaction-item');
-                const idx = Array.from(loanItem.parentNode.children).indexOf(loanItem);
-                const loan = loanData.loans[idx];
-                const monthsInput = loanItem.querySelector('.months-input');
-                const months = parseInt(monthsInput.value) || 1;
-                const totalAmount = loan.amount + (loan.amount * loan.interest / 100);
-                const perMonth = totalAmount / months;
-                loanItem.querySelector('.monthly-result').textContent =
-                    `Total: ${formatCurrency(totalAmount)} | Per Month: ${formatCurrency(perMonth)}`;
-            });
-        });
+    toggleCalculator(loanId) {
+        const calcElement = document.getElementById(`calc-${loanId}`);
+        calcElement.classList.toggle('open');
     }
 
-    document.getElementById('loanForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const amount = parseFloat(document.getElementById('loanAmount').value);
-        const details = document.getElementById('loanDetails').value;
-        const interest = parseFloat(document.getElementById('interestRate').value);
-        if (isNaN(amount) || amount <= 0 || isNaN(interest) || interest < 0 || details.trim() === '') {
-            alert('Please enter valid loan details.');
-            return;
+    calculateLoan(loanId, amount, interestRate) {
+        const months = parseInt(document.getElementById(`months-${loanId}`).value) || 1;
+        const years = months / 12;
+        const interestAmount = amount * (interestRate / 100) * years;
+        const totalAmount = amount + interestAmount;
+        const perMonth = totalAmount / months;
+        document.getElementById(`result-${loanId}`).textContent =
+            `Total: Rp ${totalAmount.toLocaleString('id-ID', {minimumFractionDigits:2})} | Per Month: Rp ${perMonth.toLocaleString('id-ID', {minimumFractionDigits:2})}`;
+    }
+
+    deleteLoan(id) {
+        if (confirm('Are you sure you want to delete this loan?')) {
+            this.loans = this.loans.filter(loan => loan.id !== id);
+            this.renderLoans();
         }
-        loanData.loans.push({ amount, details, interest });
-        updateLoanList();
-        this.reset();
-    });
+    }
+}
 
-    updateLoanList();
-});
+// Initialize Loan Tracker globally for button onclick refs
+const loanTracker = new LoanTracker();
