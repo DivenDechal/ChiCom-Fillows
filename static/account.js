@@ -1,34 +1,37 @@
 // account.js
 
+
 // Form submission handler
 document.getElementById('profileForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    const firstName = document.getElementById('firstName').value;
-    const lastName = document.getElementById('lastName').value;
-    
-    // Update display name and avatar
-    document.getElementById('displayName').textContent = `${firstName} ${lastName}`;
-    document.getElementById('profileAvatar').textContent = `${firstName[0]}${lastName[0]}`;
-    
-    // Show success message
+    const username = document.getElementById('username').value.trim();
+    document.getElementById('displayName').textContent = username;
+    document.getElementById('profileAvatar').textContent = username.length >= 2
+        ? `${username[0].toUpperCase()}${username[username.length-1].toUpperCase()}`
+        : username[0].toUpperCase();
     alert('Profile updated successfully!');
 });
 
-// Toggle setting function
-function toggleSetting(toggle) {
-    toggle.classList.toggle('active');
+// Update avatar when username changes
+document.getElementById('username').addEventListener('input', updateAvatar);
+
+function updateAvatar() {
+    const username = document.getElementById('username').value.trim();
+    document.getElementById('displayName').textContent = username;
+    document.getElementById('profileAvatar').textContent = username.length >= 2
+        ? `${username[0].toUpperCase()}${username[username.length-1].toUpperCase()}`
+        : username[0].toUpperCase();
 }
 
 // Reset form function
 function resetForm() {
-    document.getElementById('profileForm').reset();
-    document.getElementById('firstName').value = 'John';
-    document.getElementById('lastName').value = 'Doe';
+    document.getElementById('username').value = 'Username';
     document.getElementById('email').value = 'john.doe@example.com';
-    document.getElementById('phone').value = '+62 812-3456-7890';
-    document.getElementById('dateOfBirth').value = '1990-01-15';
+    document.getElementById('income').value = '5000000';
+    document.getElementById('savingRatio').value = '20';
+    updateAvatar();
 }
+
 
 // Change password function
 function changePassword() {
