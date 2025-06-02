@@ -1,0 +1,317 @@
+/* 
+   Savings Tracker Styles
+   Fillow Application
+   Filename: saving.css
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f8fc;
+    color: #333;
+}
+
+.container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header Styles */
+header {
+    background-color: #1a56bb;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    margin-left: auto;
+    margin-right: 20px;
+    gap: 25px; /* Increased spacing between buttons */
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px; /* Increased padding for better button appearance */
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 15px; /* Added curved edges */
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle background for all buttons */
+    border: 2px solid transparent; /* For smooth hover transition */
+}
+
+nav a.active {
+    background-color: #0f3a82;
+    border-bottom: 3px solid #ffffff;
+    border-radius: 15px; /* Keep curved edges for active state */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow for active button */
+}
+
+nav a:hover:not(.active) {
+    background-color: #0f3a82;
+    border-radius: 15px; /* Curved edges on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow on hover */
+}
+
+.account-icon {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 50%; /* Make it circular */
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.account-icon:hover {
+    background-color: #0f3a82;
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Content Area Styles */
+.content {
+    padding: 30px;
+    background-color: #edf5fd;
+    flex-grow: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.savings-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.savings-amount {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #4CAF50;
+}
+
+#savingsGoal {
+    color: #1a56bb;
+    font-weight: normal;
+}
+
+/* Transaction Form Styles */
+.transaction-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.transaction-form h3 {
+    margin-bottom: 15px;
+    color: #1a56bb;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+/* Transaction Section Styles */
+.transaction-section h2 {
+    margin-bottom: 15px;
+    color: #1a56bb;
+}
+
+.transaction-list {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-item:hover {
+    background-color: #f9f9f9;
+}
+
+.transaction-category {
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.transaction-amount {
+    font-weight: 600;
+}
+
+.income .transaction-amount {
+    color: #4CAF50;
+}
+
+.expense .transaction-amount {
+    color: #F44336;
+}
+
+.loan-calc-anim {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+    margin-top: 0;
+    padding-left: 20px;
+}
+
+.loan-calc-anim.open {
+    max-height: 140px;
+    opacity: 1;
+    margin-top: 16px;
+}
+
+.loan-calc-anim .loan-calc-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 7px;
+}
+
+.loan-calc-anim .monthly-result {
+    margin-top: 10px;
+    font-weight: 500;
+    color: #1a56bb;
+}
+
+@media (max-width: 600px) {
+    .loan-calc-anim .loan-calc-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+
+/* Footer Styles */
+footer {
+    background-color: #1a56bb;
+    color: white;
+    padding: 30px 50px;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 ;
+   
+}
+
+.footer-content h3 {
+    margin-bottom: 15px;
+}
+
+.contact-info p {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.contact-info i {
+    margin-right: 10px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 15px;
+    }
+    
+    nav {
+        margin: 15px 0;
+        width: 100%;
+        justify-content: center;
+        gap: 15px; /* Reduced gap for mobile */
+    }
+    
+    nav a {
+        padding: 10px 20px; /* Adjusted padding for mobile */
+    }
+    
+    .savings-amount {
+        font-size: 28px;
+    }
+    
+    .content {
+        padding: 15px;
+    }
+}

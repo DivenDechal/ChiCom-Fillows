@@ -22,6 +22,10 @@ def signup():
 def budget():
     return render_template('budget.html')
 
+@BP.route('/debts')
+def debts():
+    return render_template('debts.html')
+
 @BP.route('/saving')
 def saving():
     if 'user_id' not in session:
