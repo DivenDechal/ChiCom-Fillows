@@ -34,6 +34,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 4px 20px 0 rgba(26, 86, 187, 0.2);
 }
 
 .logo {
@@ -161,27 +162,25 @@ nav a:hover:not(.active) {
 }
 
 .submit-btn {
-    background-color: #4CAF50;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
     border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
+    padding: 16px 32px;
+    border-radius: 12px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
     margin-top: 10px;
+    position: relative;
+    overflow: hidden;
 }
-
 .submit-btn:hover {
-    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
 }
 
-/* Transaction Section Styles */
-.transaction-section h2 {
-    margin-bottom: 15px;
-    color: #1a56bb;
-}
 
 .transaction-list {
     background-color: white;
@@ -230,12 +229,13 @@ footer {
     color: white;
     padding: 30px 50px;
     margin-top: auto;
+    box-shadow: 0 -4px 20px 0 rgba(26, 86, 187, 0.17); /* up shadow */
 }
 
 .footer-content {
     max-width: 1200px;
     margin: 0 ;
-  
+   
 }
 
 .footer-content h3 {
