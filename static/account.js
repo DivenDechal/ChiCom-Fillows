@@ -94,3 +94,8 @@ function updateAvatar() {
         document.getElementById('profileAvatar').textContent = `${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}`;
     }
 }
+
+function toggleSetting(el) {
+    el.classList.toggle('active');
+}
+

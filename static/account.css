@@ -323,6 +323,30 @@ nav a:hover {
     gap: 15px;
     margin-top: 20px;
 }
+.settings-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 25px;
+}
+.security-section,
+.danger-section {
+    flex: 1;
+}
+.danger-section .section-title {
+    color: #f44336 !important;
+}
+@media (max-width: 900px) {
+    .settings-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .security-section,
+    .danger-section {
+        width: 100%;
+        margin-bottom: 25px;
+    }
+}
+
 
 /* Footer Styles */
 footer {
@@ -334,7 +358,7 @@ footer {
 
 .footer-content {
     max-width: 1200px;
-    margin: 0;
+    margin: 0 ;
 }
 
 .footer-content h3 {
