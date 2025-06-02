@@ -91,6 +91,12 @@
                             </div>
                         </div>
                         <div class="transaction-date">{{ txn.date.strftime('%Y-%m-%d %H:%M') if txn.date else '' }}</div>
+                         <!-- Add Undo button form -->
+                        <form method="POST" action="{{ url_for('BP.undo_transaction', txn_id=txn.id) }}" style="display:inline;">
+                            <button type="submit" class="undo-btn" onclick="return confirm('Undo this transaction? This action cannot be undone.')">
+                                Undo
+                            </button>
+                        </form>
                     </div>
                     {% else %}
                     <p>No transactions yet.</p>

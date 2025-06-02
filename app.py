@@ -2,6 +2,7 @@ from flask import Flask
 from models import db
 from auth import BP_auth
 from routes import BP
+from scheduler import start_scheduler
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
@@ -20,6 +21,10 @@ def init_db():
     with app.app_context():
         db.create_all()
     print("Database initialized!")
+
+with app.app_context():
+    db.create_all()
+    start_scheduler(app)
 
 if __name__ == '__main__':
     app.run(debug=True)

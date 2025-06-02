@@ -44,7 +44,7 @@ def budget():
     if not user.budget:
         budget = Budget(curr_total_budget=user.income)
         
-        accommodation = accommodation(acc_budget=0.0, acc_current=0.0)
+        accommodation = Accommodation(acc_budget=0.0, acc_current=0.0)
         entertainment = Entertainment(ent_budget=0.0, ent_current=0.0)
         food = Food(food_budget=0.0, food_current=0.0)
         transportation = Transportation(trs_budget=0.0, trs_current=0.0)
@@ -110,6 +110,7 @@ def budget():
         category_labels=category_labels,
         category_values=category_values
     )
+
 
 @BP.route('/savings', methods=['GET', 'POST'])
 @login_required_manual
@@ -229,3 +230,74 @@ def savings():
         transactions=transactions,
         budget=budget
     )
+
+@BP.route('/undo_transaction/<int:txn_id>', methods=['POST'])
+@login_required_manual
+def undo_transaction(txn_id):
+    user = get_current_user()
+    if not user:
+        return redirect(url_for('BP.login'))
+
+    txn = SavingsTransaction.query.get(txn_id)
+    if not txn or txn.savings_id != user.savings_id:
+        flash("Invalid transaction.", "error")
+        return redirect(url_for('BP.savings'))
+
+    savings = Savings.query.get(user.savings_id)
+    budget = user.budget
+
+    if txn.action == 'save':
+        if savings.curr_savings >= txn.amount:
+            savings.curr_savings -= txn.amount
+            budget.curr_total_budget += txn.amount
+        else:
+            flash("Cannot undo this transaction due to inconsistent data.", "error")
+            return redirect(url_for('BP.savings'))
+
+    elif txn.action == 'spend':
+        category_map = {
+            'Accommodation and Utilities': ('accommodation', 'acc_current'),
+            'Entertainment': ('entertainment', 'ent_current'),
+            'Food': ('food', 'food_current'),
+            'Transportation': ('transportation', 'trs_current'),
+            'Subscription': ('subscription', 'subs_current'),
+            'Others': ('other', 'other_current'),
+        }
+
+        category_name = None
+        if txn.detail:
+            for cat in category_map.keys():
+                if cat in txn.detail:
+                    category_name = cat
+                    break
+
+        if not category_name:
+            flash("Cannot determine category for undo.", "error")
+            return redirect(url_for('BP.savings'))
+
+        rel_name, current_attr = category_map[category_name]
+        category_obj = getattr(budget, rel_name)
+        if not category_obj:
+            flash("Category data missing for undo.", "error")
+            return redirect(url_for('BP.savings'))
+
+        current_value = getattr(category_obj, current_attr)
+        if current_value >= txn.amount:
+            setattr(category_obj, current_attr, current_value - txn.amount)
+            budget.curr_total_budget += txn.amount
+        else:
+            flash("Cannot undo this transaction due to inconsistent data.", "error")
+            return redirect(url_for('BP.savings'))
+
+    # Delete the transaction (undo)
+    db.session.delete(txn)
+    db.session.commit()
+
+    flash("Transaction undone successfully.", "success")
+    return redirect(url_for('BP.savings'))
+
+@BP.route('/run-monthly-update')
+def run_monthly_update():
+    from scheduler import perform_monthly_updates
+    perform_monthly_updates()
+    return "Monthly update performed!"

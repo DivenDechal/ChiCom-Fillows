@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fillow - Budget Tracker</title>
   <link rel="stylesheet" href="/static/budget.css" />
+  <style>
+    /* Overspending styles */
+    .category.overspent {
+      border: 2px solid #e74c3c; /* bright red border */
+      background-color: #fceaea;  /* light red background */
+      border-radius: 6px;
+    }
+    .overspent-label {
+      color: #e74c3c;
+      font-weight: bold;
+      margin-left: 0.5rem;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
   <!-- Navbar -->
@@ -38,9 +52,11 @@
     <div class="budget-categories">
       {% for name, data in categories.items() %}
         {% set spent = data.current or 0 %}
+        {% set budget_amount = data.budget or 0 %}
         {% set class_name = name.split()[0].lower() %}
+        {% set overspent = spent > budget_amount %}
 
-        <div class="category">
+        <div class="category {% if overspent %}overspent{% endif %}">
           <div class="category-icon {{ class_name }}-bg">
             {% if class_name == "accommodation" %}
               <i class="fas fa-home"></i>
@@ -59,7 +75,11 @@
           <div class="category-details">
             <div class="category-name {{ class_name }}">{{ name }}</div>
             <div class="category-budget">
-              Rp {{ "{:,.2f}".format(spent) }} spent
+              <span>Budgeted: Rp {{ "{:,.2f}".format(budget_amount) }}</span><br />
+              <span>Spent: Rp {{ "{:,.2f}".format(spent) }}</span>
+              {% if overspent %}
+                <span class="overspent-label">Overspent!</span>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -67,7 +87,6 @@
     </div>
   </div>
 </div>
-
 
   <footer>
     <h3 class="footer-title">Contact Us</h3>

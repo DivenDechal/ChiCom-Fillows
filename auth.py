@@ -50,6 +50,7 @@ def signup_post():
             flash('Username already exists', 'error')
             return redirect(url_for('BP.signup'))
 
+        # Create user
         new_user = User(
             username=username,
             email=email,
@@ -59,20 +60,31 @@ def signup_post():
         new_user.set_password(password)
         db.session.add(new_user)
 
-        accommodation       = Accommodation(acc_budget=0.0, acc_current=0.0)
-        entertainment = Entertainment(ent_budget=0.0, ent_current=0.0)
-        food          = Food(food_budget=0.0, food_current=0.0)
-        transportation= Transportation(trs_budget=0.0, trs_current=0.0)
-        subscription  = Subscription(subs_budget=0.0, subs_current=0.0)
-        other         = Other(other_budget=0.0, other_current=0.0)
+        # Calculate savings
+        savings_amount = monthly_income * (saving_percentage / 100)
+        remaining_budget = monthly_income - savings_amount
+
+        # Hardcoded budget splits
+        acc_amt = remaining_budget * 0.30
+        food_amt = remaining_budget * 0.20
+        trs_amt = remaining_budget * 0.15
+        ent_amt = remaining_budget * 0.15
+        subs_amt = remaining_budget * 0.10
+        other_amt = remaining_budget * 0.10
+
+        accommodation = Accommodation(acc_budget=acc_amt, acc_current=0.0)
+        entertainment = Entertainment(ent_budget=ent_amt, ent_current=0.0)
+        food = Food(food_budget=food_amt, food_current=0.0)
+        transportation = Transportation(trs_budget=trs_amt, trs_current=0.0)
+        subscription = Subscription(subs_budget=subs_amt, subs_current=0.0)
+        other = Other(other_budget=other_amt, other_current=0.0)
 
         db.session.add_all([accommodation, entertainment, food,
                             transportation, subscription, other])
         db.session.flush()
 
-        total_budget = monthly_income
         budget = Budget(
-            curr_total_budget=total_budget,
+            curr_total_budget=remaining_budget,
             accommodation=accommodation,
             entertainment=entertainment,
             food=food,
@@ -82,11 +94,13 @@ def signup_post():
         )
         db.session.add(budget)
         db.session.flush()
-
         new_user.budget_id = budget.budget_id
 
-        savings_goal = monthly_income * (saving_percentage / 100.0)
-        savings = Savings(curr_savings=0.0, saving_goal=savings_goal)
+        # Savings object with full amount
+        savings = Savings(
+            curr_savings=savings_amount,
+            saving_goal=savings_amount
+        )
         db.session.add(savings)
         db.session.flush()
         new_user.savings_id = savings.id
@@ -110,3 +124,4 @@ def signup_post():
         db.session.rollback()
         flash('An error occurred during registration', 'error')
         return redirect(url_for('BP.signup'))
+
