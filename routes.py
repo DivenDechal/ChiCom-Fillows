@@ -379,9 +379,20 @@ def undo_transaction(txn_id):
 
 
 @BP.route('/account')
+@login_required_manual
 def account():
     return render_template('account.html')
 
+@BP.route('/logout')
+@login_required_manual
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('BP.login'))
+
+@BP.route('/debts')
+@login_required_manual
+def debts():
+    return render_template('debts.html')
 
 @BP.route('/run-monthly-update')
 def run_monthly_update():

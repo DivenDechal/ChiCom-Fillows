@@ -5,6 +5,73 @@ function registration_successful() {
   alert("Registration successful! Please check your email for confirmation.");
 }
 
+function closeFlash(button) {
+  const flashMessage = button.parentElement;
+  flashMessage.style.animation = 'slideOut 0.3s ease-in forwards';
+  setTimeout(() => {
+    flashMessage.remove();
+  }, 300);
+}
+
+// Auto-close flash messages after 4 seconds
+function autoCloseFlashes() {
+  const flashMessages = document.querySelectorAll('.flash-message');
+  flashMessages.forEach((flash, index) => {
+    setTimeout(() => {
+      if (flash.parentElement) {
+        flash.style.animation = 'slideOut 0.3s ease-in forwards';
+        setTimeout(() => {
+          if (flash.parentElement) {
+            flash.remove();
+          }
+        }, 300);
+      }
+    }, 4000 + (index * 200)); // Stagger the auto-close
+  });
+}
+
+// Initialize auto-close when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  autoCloseFlashes();
+});
+
+// Demo button to test flash messages
+function addDemoFlash() {
+  const container = document.getElementById('flashContainer');
+  const messages = [
+    { type: 'success', icon: '✓', text: 'Operation completed successfully!' },
+    { type: 'error', icon: '!', text: 'An error occurred. Please try again.' },
+    { type: 'warning', icon: '⚠', text: 'Please check your input values.' },
+    { type: 'info', icon: 'i', text: 'New feature available in settings.' }
+  ];
+      
+  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+      
+  const flashDiv = document.createElement('div');
+  flashDiv.className = `flash-message ${randomMessage.type}`;
+  flashDiv.innerHTML = `
+    <div class="flash-content">
+      <div class="flash-icon">${randomMessage.icon}</div>
+      <div class="flash-text">${randomMessage.text}</div>
+    </div>
+    <button class="flash-close" onclick="closeFlash(this)">&times;</button>
+  `;
+      
+  container.appendChild(flashDiv);
+      
+  // Auto-close this message
+  setTimeout(() => {
+    if (flashDiv.parentElement) {
+      flashDiv.style.animation = 'slideOut 0.3s ease-in forwards';
+      setTimeout(() => {
+        if (flashDiv.parentElement) {
+          flashDiv.remove();
+        }
+      }, 300);
+    }
+  }, 4000);
+}
+
 // 2) Perform all field checks; return true if valid, false otherwise
 function validate() {
   const form     = document.getElementById('signup-form');
@@ -96,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
     } else {
       // All good: show alert, then allow form to submit
-      registration_successful();
+      // registration_successful();
       // no need to call form.submit() manually
     }
   });
@@ -111,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Prevent double-submit
             e.preventDefault();
             if (validate()) {
-              registration_successful();
+              // registration_successful();
               form.submit();
             }
           }

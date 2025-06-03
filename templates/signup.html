@@ -9,7 +9,23 @@
 </head>
 <body>
 
-  
+  <div class="flash-container" id="flashContainer">
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="flash-message {{ 'danger' if category == 'error' else category }}">
+      <div class="flash-content">
+        <div class="flash-icon">
+          {% if category == 'success' %}✓
+          {% elif category == 'error' or category == 'danger' %}!
+          {% elif category == 'warning' %}⚠
+          {% else %}i{% endif %}
+        </div>
+        <div class="flash-text">{{ message }}</div>
+      </div>
+      <button class="flash-close" onclick="closeFlash(this)">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+ 
 
   <div class="main-container">
     <div class="sidebar">
