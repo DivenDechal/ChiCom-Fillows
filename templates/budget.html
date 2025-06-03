@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fillow - Budget Tracker</title>
   <link rel="stylesheet" href="/static/budget.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   <style>
     /* Overspending styles */
     .category.overspent {
@@ -21,92 +22,177 @@
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <header>
-    <nav class="navbar">
-      <div class="logo" onclick="window.location.href= '/' ">Fillow</div>
-      <ul class="nav-menu">
-        <li><a onclick="window.location.href= '/savings' ">Savings</a></li>
-        <li><a onclick="window.location.href= '/budget' ">Budget</a></li>
-        <li><a href="">Debt</a></li>
-        <li><a href="{{ url_for('BP_auth.logout') }}" class="log-out">Log Out</a></li>
-      </ul>
-    </nav>
-  </header>
-
   <div class="container">
-  <div class="content">
-    <div class="budget-overview">
-      <div class="chart-container">
-        <canvas id="budgetChart"></canvas>
-        <div id="no-data-message" style="display:none; text-align:center; color:#999; margin-top: 1rem;">
-          No budget data available yet. Add some transactions to see the chart.
+    <header>
+      <a href="/" class="logo">FillUps</a>
+      <nav>
+        <a href="/budget" class="active">Budget</a>
+        <a href="/savings">Savings</a>
+        <a href="debt.html">Debt</a>
+      </nav>
+      <a href="/account" class="account-icon" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+    </header>
+
+    <div class="content">
+      <div class="budget-overview">
+        <div class="chart-container">
+          <canvas id="budgetChart"></canvas>
+          <div class="total-budget">
+            <p>Total budget</p>
+            <h2>Rp {{ "{:,.2f}".format(total_budget) }}</h2>
+          </div>
         </div>
-        <div class="total-budget">
-          <p>Total budget</p>
-          <h2>Rp {{ "{:,.2f}".format(total_budget) }}</h2>
+
+        <div class="budget-categories">
+          {% for name, data in categories.items() %}
+            {% set spent = data.current or 0 %}
+            {% set budget_amount = data.budget or 0 %}
+            {% set class_name = name.split()[0].lower() %}
+            {% set overspent = spent > budget_amount %}
+            {% set percent_used = (spent / budget_amount * 100) if budget_amount > 0 else 0 %}
+
+            <div class="category {% if overspent %}overspent{% endif %}" data-category="{{ class_name }}">
+              <div class="category-icon {{ class_name }}-bg">
+                {% if class_name == "accommodation" %}
+                  <i class="fas fa-home"></i>
+                {% elif class_name == "entertainment" %}
+                  <i class="fas fa-film"></i>
+                {% elif class_name == "food" %}
+                  <i class="fas fa-utensils"></i>
+                {% elif class_name == "transportation" %}
+                  <i class="fas fa-car"></i>
+                {% elif class_name == "subscription" %}
+                  <i class="fas fa-calendar-check"></i>
+                {% else %}
+                  <i class="fas fa-ellipsis-h"></i>
+                {% endif %}
+              </div>
+              <div class="category-details">
+                <div class="category-header-row">
+                  <div>
+                    <div class="category-name {{ class_name }}">{{ name }}</div>
+                    <div class="category-budget">
+                      Rp {{ "{:,.2f}".format(spent) }} spent out of Rp {{ "{:,.2f}".format(budget_amount) }} budget
+                      {% if overspent %}
+                        <span class="overspent-label">Overspent!</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="category-actions">
+                    <button class="add-btn" data-modal="addModal-{{ class_name }}">
+                      <i class="fas fa-plus"></i> Add
+                    </button>
+                    <button class="view-btn" data-modal="viewModal-{{ class_name }}">
+                      <i class="fas fa-eye"></i> View
+                    </button>
+                  </div>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress {{ class_name }}-bg" style="width: {{ percent_used if percent_used <= 100 else 100 }}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Modal for this category -->
+            <div id="addModal-{{ class_name }}" class="modal">
+              <div class="modal-content">
+                <h3>Add Transaction - {{ name }}</h3>
+                <form method="POST" action="{{ url_for('BP.budget') }}">
+                  <input type="hidden" name="category" value="{{ class_name }}" />
+                  <div class="form-group">
+                    <label for="transactionDetail-{{ class_name }}">Detail</label>
+                    <input type="text" id="transactionDetail-{{ class_name }}" name="detail" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="transactionCost-{{ class_name }}">Cost (Rp)</label>
+                    <input type="number" id="transactionCost-{{ class_name }}" name="cost" min="0" required />
+                  </div>
+                  <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-secondary close-btn" data-modal="addModal-{{ class_name }}">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- View Modal for this category -->
+            <div id="viewModal-{{ class_name }}" class="modal">
+              <div class="modal-content">
+                <h3>Transaction History - {{ name }}</h3>
+                <div class="transaction-history-list" id="transactionList-{{ class_name }}">
+                    {% if transactions_by_category.get(class_name) %}
+                        {% for txn in transactions_by_category[class_name] %}
+                        <div class="transaction-item">
+                            <div class="transaction-details">
+                            <div class="transaction-detail">{{ txn.detail or 'No detail' }}</div>
+                            <div class="transaction-amount">Rp {{ "{:,.2f}".format(txn.amount) }}</div>
+                            </div>
+                            <div class="transaction-date">
+                            {{ txn.date.strftime('%Y-%m-%d %H:%M') if txn.date else '' }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No transactions yet for this category.</p>
+                    {% endif %}
+                    </div>
+
+                <div class="button-group">
+                  <button type="button" class="btn btn-secondary close-btn" data-modal="viewModal-{{ class_name }}">Close</button>
+                </div>
+              </div>
+            </div>
+
+          {% endfor %}
         </div>
       </div>
     </div>
 
-    <div class="budget-categories">
-      {% for name, data in categories.items() %}
-        {% set spent = data.current or 0 %}
-        {% set budget_amount = data.budget or 0 %}
-        {% set class_name = name.split()[0].lower() %}
-        {% set overspent = spent > budget_amount %}
+    <!-- Footer -->
+    <footer>
+      <h3 class="footer-title">Contact Us</h3>
+      <div class="contact-info">
+        <p><i class="fas fa-phone"></i> Call Us: +62 811-227-336</p>
+        <p><i class="fas fa-map-marker-alt"></i> Location: Binus Alam Sutera</p>
+      </div>
+    </footer>
 
-        <div class="category {% if overspent %}overspent{% endif %}">
-          <div class="category-icon {{ class_name }}-bg">
-            {% if class_name == "accommodation" %}
-              <i class="fas fa-home"></i>
-            {% elif class_name == "entertainment" %}
-              <i class="fas fa-film"></i>
-            {% elif class_name == "food" %}
-              <i class="fas fa-utensils"></i>
-            {% elif class_name == "transportation" %}
-              <i class="fas fa-car"></i>
-            {% elif class_name == "subscription" %}
-              <i class="fas fa-calendar-check"></i>
-            {% else %}
-              <i class="fas fa-ellipsis-h"></i>
-            {% endif %}
-          </div>
-          <div class="category-details">
-            <div class="category-name {{ class_name }}">{{ name }}</div>
-            <div class="category-budget">
-              <span>Budgeted: Rp {{ "{:,.2f}".format(budget_amount) }}</span><br />
-              <span>Spent: Rp {{ "{:,.2f}".format(spent) }}</span>
-              {% if overspent %}
-                <span class="overspent-label">Overspent!</span>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <!-- Embed chart data safely -->
+    <script id="category-data" type="application/json">
+      {{ {"labels": category_labels, "values": category_values} | tojson }}
+    </script>
+
+    <script src="/static/budget.js"></script>
+
+    <!-- Minimal JS for opening and closing modals -->
+    <script>
+      document.querySelectorAll('.add-btn, .view-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const modalId = button.getAttribute('data-modal');
+          document.getElementById(modalId).style.display = 'block';
+        });
+      });
+
+      document.querySelectorAll('.close-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const modalId = button.getAttribute('data-modal');
+          document.getElementById(modalId).style.display = 'none';
+        });
+      });
+
+      // Close modal when clicking outside modal-content
+      window.addEventListener('click', e => {
+        if (e.target.classList.contains('modal')) {
+          e.target.style.display = 'none';
+        }
+      });
+    </script>
   </div>
-</div>
-
-  <footer>
-    <h3 class="footer-title">Contact Us</h3>
-    <div class="contact-info">
-      <p><i class="fas fa-phone"></i> Call Us: +62 811-227-336</p>
-      <p><i class="fas fa-map-marker-alt"></i> Location: Binus Alam Sutera</p>
-    </div>
-  </footer>
-
-  <!-- Font Awesome CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-  <!-- Chart.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-
-  <!-- Embed category data safely as JSON -->
-  <script id="category-data" type="application/json">
-    {{ {"labels": category_labels, "values": category_values} | tojson }}
-  </script>
-
-  <!-- Your main JS -->
-  <script src="/static/budget.js"></script>
 </body>
 </html>

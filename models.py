@@ -108,7 +108,15 @@ class SavingsTransaction(db.Model):
     detail = db.Column(db.Text, nullable=True)
     date = db.Column(db.DateTime, nullable=False)
     
-
     savings = db.relationship('Savings', backref=db.backref('transactions', lazy=True))
 
 
+class BudgetTransaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    category = db.Column(db.String(50), nullable=False)  # 'accommodation', 'food', etc.
+    amount = db.Column(db.Float, nullable=False)
+    detail = db.Column(db.Text, nullable=True)
+    date = db.Column(db.DateTime, nullable=False)
+
+    user = db.relationship('User', backref='budget_transactions')

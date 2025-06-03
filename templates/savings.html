@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fillow - Savings Tracker</title>
-    <link rel="stylesheet" href="/static/saving.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
+    <link rel="stylesheet" href="/static/saving.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="logo">Fillow</div>
+            <a href="/" class="logo">FillUps</a>
             <nav>
-                <a href="{{ url_for('BP.budget') }}">Budget</a>
-                <a href="{{ url_for('BP.savings') }}" class="active">Saving</a>
+                <a href="/budget">Budget</a>
+                <a href="/savings" class="active">Savings</a>
                 <a href="debt.html">Debt</a>
             </nav>
-            <a href="{{ url_for('BP_auth.logout') }}" class="log-out">Log Out</a>
+            <a href="/account" class="account-icon" title="Account">
+                <i class="fas fa-user"></i>
+            </a>
+            </button>
         </header>
-
+        
         <div class="content">
             <h1 class="savings-title">Your Savings,</h1>
             <div class="savings-amount">
@@ -91,12 +91,6 @@
                             </div>
                         </div>
                         <div class="transaction-date">{{ txn.date.strftime('%Y-%m-%d %H:%M') if txn.date else '' }}</div>
-                         <!-- Add Undo button form -->
-                        <form method="POST" action="{{ url_for('BP.undo_transaction', txn_id=txn.id) }}" style="display:inline;">
-                            <button type="submit" class="undo-btn" onclick="return confirm('Undo this transaction? This action cannot be undone.')">
-                                Undo
-                            </button>
-                        </form>
                     </div>
                     {% else %}
                     <p>No transactions yet.</p>
@@ -104,7 +98,7 @@
                 </div>
             </div>
         </div>
-
+        
         <footer>
             <div class="footer-content">
                 <h3>Contact Us</h3>
@@ -115,7 +109,7 @@
             </div>
         </footer>
     </div>
-
+    
     <script src="/static/saving.js"></script>
 </body>
 </html>
