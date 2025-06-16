@@ -98,3 +98,7 @@ function updateAvatar() {
 function toggleSetting(el) {
     el.classList.toggle('active');
 }
+
+function logout() {
+    window.location.href = '/logout';
+}

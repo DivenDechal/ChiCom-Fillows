@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 
 db = SQLAlchemy()
@@ -13,6 +14,8 @@ class User(db.Model):
     splitting = db.Column(db.Integer, nullable=False)
     savings_id = db.Column(db.Integer, db.ForeignKey('savings.id'))  # <-- FK changed here
     budget_id = db.Column(db.Integer, db.ForeignKey('budget.budget_id'))
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -120,3 +123,15 @@ class BudgetTransaction(db.Model):
     date = db.Column(db.DateTime, nullable=False)
 
     user = db.relationship('User', backref='budget_transactions')
+
+class Loan(db.Model):
+    __tablename__ = 'loan'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    interest_rate = db.Column(db.Float, nullable=False)
+    details = db.Column(db.String(255), nullable=False)
+    date_added = db.Column(db.DateTime, nullable=False)
+
+    user = db.relationship('User', backref=db.backref('loans', lazy=True))

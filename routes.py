@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash, jsonify
-from models import db, User, Budget, Accommodation, Entertainment, Food, Transportation, Subscription, Other, SavingsTransaction, Savings, BudgetTransaction
+from models import db, User, Budget, Accommodation, Entertainment, Food, Transportation, Subscription, Other, SavingsTransaction, Savings, BudgetTransaction, Loan
 from datetime import datetime
 from functools import wraps
 
@@ -378,10 +378,60 @@ def undo_transaction(txn_id):
     return redirect(url_for('BP.savings'))
 
 
-@BP.route('/account')
+# Add this to your BP file
+
+@BP.route('/account', methods=['GET'])
 @login_required_manual
 def account():
-    return render_template('account.html')
+    user = get_current_user()
+    return render_template('account.html', user=user)
+
+@BP.route('/update_profile', methods=['POST'])
+@login_required_manual
+def update_profile():
+    user = get_current_user()
+    if not user:
+        return jsonify(success=False, message="Not logged in"), 401
+
+    data = request.json
+    user.username = data.get('username', user.username)
+    user.email = data.get('email', user.email)
+    user.income = float(data.get('income', user.income))
+    user.splitting = int(data.get('savingRatio', user.splitting))  # match naming!
+
+    db.session.commit()
+    return jsonify(success=True, message="Profile updated successfully!")
+
+
+@BP.route('/change_password', methods=['POST'])
+@login_required_manual
+def change_password():
+    user = get_current_user()
+    if not user:
+        return jsonify(success=False, message="Not logged in"), 401
+
+    data = request.json
+    new_password = data.get('newPassword')
+    if new_password:
+        user.set_password(new_password)  # ✅ hash it properly!
+        db.session.commit()
+        return jsonify(success=True, message="Password changed successfully!")
+    return jsonify(success=False, message="Password is required")
+
+
+@BP.route('/delete_account', methods=['POST'])
+@login_required_manual
+def delete_account():
+    user = get_current_user()
+    confirmation = request.json.get('confirmation')
+    if confirmation == 'DELETE':
+        # In real app: flag for deletion instead of immediate delete
+        db.session.delete(user)
+        db.session.commit()
+        session.clear()
+        return jsonify(success=True, message="Your account has been deleted.")
+    return jsonify(success=False, message="Invalid confirmation.")
+
 
 @BP.route('/logout')
 @login_required_manual
@@ -389,10 +439,78 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('BP.login'))
 
-@BP.route('/debts')
+@BP.route('/debts', methods=['GET'])
 @login_required_manual
 def debts():
-    return render_template('debts.html')
+    user = get_current_user()
+    if not user:
+        return redirect(url_for('BP.login'))
+
+    debts = Loan.query.filter_by(user_id=user.id).order_by(Loan.date_added.desc()).all()
+
+    # Serialize loans to dictionaries
+    serialized_debts = []
+    for loan in debts:
+        serialized_debts.append({
+            'id': loan.id,
+            'amount': loan.amount,
+            'interest_rate': loan.interest_rate,
+            'details': loan.details,
+            'date_added': loan.date_added.strftime("%Y-%m-%d %H:%M:%S")
+        })
+
+    return render_template('debts.html', debts=serialized_debts)
+
+
+
+@BP.route('/debts/add', methods=['POST'])
+@login_required_manual
+def add_debt():
+    user = get_current_user()
+    if not user:
+        return jsonify(success=False, message="Not logged in"), 401
+
+    try:
+        data = request.get_json()
+        amount = float(data.get('amount', 0))
+        interest_rate = float(data.get('interest_rate', 0))
+        details = data.get('details', '').strip()
+
+        if amount <= 0:
+            return jsonify(success=False, message="Loan amount must be greater than zero.")
+
+        new_loan = Loan(
+            user_id=user.id,
+            amount=amount,
+            interest_rate=interest_rate,
+            details=details,
+            date_added=datetime.now()
+        )
+        db.session.add(new_loan)
+        db.session.commit()
+
+        return jsonify(success=True, message="Loan added successfully.")
+
+    except Exception as e:
+        return jsonify(success=False, message=str(e)), 400
+
+
+@BP.route('/debts/delete/<int:loan_id>', methods=['DELETE'])
+@login_required_manual
+def delete_debt(loan_id):
+    user = get_current_user()
+    if not user:
+        return jsonify(success=False, message="Not logged in"), 401
+
+    loan = Loan.query.filter_by(id=loan_id, user_id=user.id).first()
+    if not loan:
+        return jsonify(success=False, message="Loan not found.")
+
+    db.session.delete(loan)
+    db.session.commit()
+
+    return jsonify(success=True, message="Loan deleted successfully.")
+
 
 @BP.route('/run-monthly-update')
 def run_monthly_update():
