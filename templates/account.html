@@ -31,7 +31,7 @@
       <!-- Profile Information -->
       <div class="profile-section">
         <div class="profile-header">
-          <div class="profile-avatar">{{ user.username[0]|upper }}</div>
+          <div class="profile-avatar" id="profileAvatar">{{ user.username[0]|upper }}</div>
           <div class="profile-info">
             <h2 id="displayName">{{ user.username }}</h2>
             <p>Member since {{ user.created_at.strftime('%B %Y') }}</p>
@@ -74,15 +74,15 @@
           Security
         </h3>
         <div class="button-group">
-          <button class="btn btn-primary" onclick="openPasswordModal()">
+          <button class="btn btn-primary" id="changePasswordBtn">
             <i class="fas fa-key"></i>
             Change Password
           </button>
-          <button class="btn btn-danger" onclick="openDeleteModal()">
+          <button class="btn btn-danger" id="deleteAccountBtn">
             <i class="fas fa-user-slash"></i>
             Delete Account
           </button>
-          <button class="btn btn-secondary" onclick="logout()">
+          <button class="btn btn-secondary" id="logoutBtn">
             <i class="fas fa-sign-out-alt"></i>
             Logout
           </button>
@@ -103,7 +103,7 @@
             <button type="submit" class="btn btn-primary">
               Update Password
             </button>
-            <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
+            <button type="button" class="btn btn-secondary" id="cancelPasswordBtn">Cancel</button>
           </div>
         </form>
       </div>
@@ -116,8 +116,8 @@
         <p>Type <strong>DELETE</strong> to confirm account deletion:</p>
         <input type="text" id="deleteConfirmInput" placeholder="DELETE" />
         <div class="button-group">
-          <button class="btn btn-danger" onclick="deleteAccount()">Delete</button>
-          <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+          <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+          <button class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
         </div>
       </div>
     </div>
@@ -133,71 +133,6 @@
     </footer>
   </div>
 
-  <script>
-    // Profile form submit
-    document.getElementById('profileForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const data = {
-        username: document.getElementById('username').value,
-        email: document.getElementById('email').value,
-        income: document.getElementById('income').value,
-        savingRatio: document.getElementById('savingRatio').value
-      };
-      const response = await fetch('/update_profile', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      });
-      const res = await response.json();
-      alert(res.message);
-      if (res.success) location.reload();
-    });
-
-    // Password modal
-    function openPasswordModal() {
-      document.getElementById('passwordModal').style.display = 'block';
-    }
-    function closePasswordModal() {
-      document.getElementById('passwordModal').style.display = 'none';
-    }
-    document.getElementById('passwordForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const data = {
-        newPassword: document.getElementById('newPassword').value
-      };
-      const response = await fetch('/change_password', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      });
-      const res = await response.json();
-      alert(res.message);
-      if (res.success) closePasswordModal();
-    });
-
-    // Delete modal
-    function openDeleteModal() {
-      document.getElementById('deleteModal').style.display = 'block';
-    }
-    function closeDeleteModal() {
-      document.getElementById('deleteModal').style.display = 'none';
-    }
-    async function deleteAccount() {
-      const confirmation = document.getElementById('deleteConfirmInput').value;
-      const response = await fetch('/delete_account', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ confirmation: confirmation })
-      });
-      const res = await response.json();
-      alert(res.message);
-      if (res.success) window.location.href = '/';
-    }
-
-    // Logout function
-    function logout() {
-      window.location.href = '/logout';
-    }
-  </script>
+  <script src="/static/account.js"></script>
 </body>
 </html>
