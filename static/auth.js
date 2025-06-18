@@ -134,3 +134,87 @@ function closeFlash(button) {
           }
         });
     });
+
+    function closeFlash(button) {
+      const flashMessage = button.parentElement;
+      flashMessage.style.animation = 'slideOut 0.3s ease-in forwards';
+      setTimeout(() => {
+        flashMessage.remove();
+      }, 300);
+    }
+
+    // Auto-close flash messages after 4 seconds
+    function autoCloseFlashes() {
+      const flashMessages = document.querySelectorAll('.flash-message');
+      flashMessages.forEach((flash, index) => {
+        setTimeout(() => {
+          if (flash.parentElement) {
+            flash.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => {
+              if (flash.parentElement) {
+                flash.remove();
+              }
+            }, 300);
+          }
+        }, 4000 + (index * 200)); // Stagger the auto-close
+      });
+    }
+
+    // Form validation (basic)
+    function validateSignIn() {
+      const email = document.getElementById('email');
+      const password = document.getElementById('password');
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+      
+      let valid = true;
+
+      // Email validation
+      if (!/.+@.+\..+/.test(email.value.trim())) {
+        emailError.textContent = "Please enter a valid email address.";
+        emailError.style.display = 'block';
+        valid = false;
+      } else {
+        emailError.style.display = 'none';
+      }
+
+      // Password validation
+      if (password.value.length < 1) {
+        passwordError.textContent = "Please enter your password.";
+        passwordError.style.display = 'block';
+        valid = false;
+      } else {
+        passwordError.style.display = 'none';
+      }
+
+      return valid;
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      autoCloseFlashes();
+      
+      const form = document.getElementById('signin-form');
+
+      // On form submit, validate first
+      form.addEventListener('submit', function(e) {
+        if (!validateSignIn()) {
+          e.preventDefault();
+        }
+      });
+
+      // Optional: validate on Enter key press
+      ['email', 'password'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('keypress', e => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              if (validateSignIn()) {
+                form.submit();
+              }
+            }
+          });
+        }
+      });
+    });

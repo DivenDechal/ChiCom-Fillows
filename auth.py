@@ -24,10 +24,6 @@ def signin_post():
     session['user_id'] = user.id
     return redirect(url_for('BP.savings'))
 
-@BP_auth.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    return redirect(url_for('BP.login'))
 
 @BP_auth.route('/signup', methods=['POST'])
 def signup_post():

@@ -436,6 +436,7 @@ def delete_account():
 @BP.route('/logout')
 @login_required_manual
 def logout():
+    flash('Successfully logged out', 'success')
     session.pop('user_id', None)
     return redirect(url_for('BP.login'))
 
