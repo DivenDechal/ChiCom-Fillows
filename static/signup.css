@@ -15,7 +15,7 @@
       padding: 0;
     }
 
-        /* Flash Messages Styling */
+    /* Flash Messages Styling */
     .flash-container {
       position: fixed;
       top: 20px;
@@ -41,23 +41,9 @@
       overflow: hidden;
     }
 
-    .flash-message::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 4px;
-      animation: progressBar 4s linear forwards;
-    }
-
     .flash-message.success {
       border-left-color: #4caf50;
       background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
-    }
-
-    .flash-message.success::before {
-      background: #4caf50;
     }
 
     .flash-message.error,
@@ -66,27 +52,14 @@
       background: linear-gradient(135deg, #ffebee, #fce4ec);
     }
 
-    .flash-message.error::before,
-    .flash-message.danger::before {
-      background: #f44336;
-    }
-
     .flash-message.warning {
       border-left-color: #ff9800;
       background: linear-gradient(135deg, #fff3e0, #ffeaa7);
     }
 
-    .flash-message.warning::before {
-      background: #ff9800;
-    }
-
     .flash-message.info {
       border-left-color: #2196f3;
       background: linear-gradient(135deg, #e3f2fd, #e1f5fe);
-    }
-
-    .flash-message.info::before {
-      background: #2196f3;
     }
 
     .flash-content {
@@ -173,15 +146,6 @@
       to {
         transform: translateX(100%);
         opacity: 0;
-      }
-    }
-
-    @keyframes progressBar {
-      from {
-        width: 4px;
-      }
-      to {
-        width: 100%;
       }
     }
 
@@ -293,10 +257,25 @@
       cursor: pointer;
       transition: background 0.3s;
       margin-top: 1rem;
+      text-decoration: none;
+      text-align: center;
+      display: inline-block;
     }
 
     .btn:hover {
       background: #f57c00;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #4285f4;
+      border: 2px solid #4285f4;
+      margin-top: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+      background: #4285f4;
+      color: white;
     }
 
     .toggle-link {
