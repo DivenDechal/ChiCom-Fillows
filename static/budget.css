@@ -5,6 +5,21 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Overspending styles */
+.category.overspent {
+    border: 2px solid #e74c3c; /* bright red border */
+    background-color: #fceaea;  /* light red background */
+    border-radius: 6px;
+}
+
+.overspent-label {
+    color: #e74c3c;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+}
+
+
 body {
     background-color: #f5f8fc;
     color: #333;

@@ -6,20 +6,6 @@
   <title>Fillow - Budget Tracker</title>
   <link rel="stylesheet" href="/static/budget.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-  <style>
-    /* Overspending styles */
-    .category.overspent {
-      border: 2px solid #e74c3c; /* bright red border */
-      background-color: #fceaea;  /* light red background */
-      border-radius: 6px;
-    }
-    .overspent-label {
-      color: #e74c3c;
-      font-weight: bold;
-      margin-left: 0.5rem;
-      font-size: 0.9rem;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
@@ -170,29 +156,6 @@
 
     <script src="/static/budget.js"></script>
 
-    <!-- Minimal JS for opening and closing modals -->
-    <script>
-      document.querySelectorAll('.add-btn, .view-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          const modalId = button.getAttribute('data-modal');
-          document.getElementById(modalId).style.display = 'block';
-        });
-      });
-
-      document.querySelectorAll('.close-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          const modalId = button.getAttribute('data-modal');
-          document.getElementById(modalId).style.display = 'none';
-        });
-      });
-
-      // Close modal when clicking outside modal-content
-      window.addEventListener('click', e => {
-        if (e.target.classList.contains('modal')) {
-          e.target.style.display = 'none';
-        }
-      });
-    </script>
   </div>
 </body>
 </html>
