@@ -212,78 +212,32 @@ def savings():
             return redirect(url_for('BP.savings'))
 
         if action == 'save':
-            if budget.curr_total_budget >= amount:
-                budget.curr_total_budget -= amount
-                savings.curr_savings += amount
+            savings.curr_savings += amount
 
-                new_txn = SavingsTransaction(
-                    savings_id=savings.id,
-                    action='save',
-                    amount=amount,
-                    detail=detail,
-                    date=date
-                )
-                db.session.add(new_txn)
-                db.session.commit()
-                flash("Money saved successfully!", "success")
-            else:
-                flash("Insufficient total budget to save this amount.", "error")
+            new_txn = SavingsTransaction(
+                savings_id=savings.id,
+                action='save',
+                amount=amount,
+                detail=detail,
+                date=date
+            )
+            db.session.add(new_txn)
+            db.session.commit()
+            flash("Money saved successfully!", "success")
+            
 
         elif action == 'spend':
             category = request.form.get('category')
 
-            # Map categories to their respective models and fields
-            category_map = {
-                'Accommodation and Utilities': ('accommodation', 'acc_current'),
-                'Entertainment': ('entertainment', 'ent_current'),
-                'Food': ('food', 'food_current'),
-                'Transportation': ('transportation', 'trs_current'),
-                'Subscription': ('subscription', 'subs_current'),
-                'Others': ('other', 'other_current'),
-            }
-
-            if category not in category_map:
-                flash("Invalid category selected.", "error")
+            if amount <= 0:
+                flash("Amount must be greater than zero.", "error")
                 return redirect(url_for('BP.savings'))
-
-            rel_name, current_attr = category_map[category]
-            category_obj = getattr(budget, rel_name)
-
-            # Create category record if it doesn't exist
-            if not category_obj:
-                if rel_name == 'accommodation':
-                    category_obj = Accommodation(acc_budget=0, acc_current=0)
-                elif rel_name == 'entertainment':
-                    category_obj = Entertainment(ent_budget=0, ent_current=0)
-                elif rel_name == 'food':
-                    category_obj = Food(food_budget=0, food_current=0)
-                elif rel_name == 'transportation':
-                    category_obj = Transportation(trs_budget=0, trs_current=0)
-                elif rel_name == 'subscription':
-                    category_obj = Subscription(subs_budget=0, subs_current=0)
-                elif rel_name == 'other':
-                    category_obj = Other(other_budget=0, other_current=0)
-                
-                db.session.add(category_obj)
-                db.session.flush()  # Get the ID
-                setattr(budget, f"{rel_name}_id", getattr(category_obj, f"{rel_name}_id"))
-                setattr(budget, rel_name, category_obj)
-
-            # Check if savings have enough funds
+            
             if savings.curr_savings >= amount:
-                # Deduct from savings (not from budget)
+                # Deduct from savings
                 savings.curr_savings -= amount
-                
-                # Add to category spending (track as positive)
-                current_value = getattr(category_obj, current_attr)
-                setattr(category_obj, current_attr, current_value + amount)
-                
-                # Update category transaction details
-                category_obj.transaction = f"Spent {amount}"
-                category_obj.detail = detail
-                category_obj.date = date
 
-                # Record savings transaction
+                # Record savings transaction (category included in detail only)
                 new_txn = SavingsTransaction(
                     savings_id=savings.id,
                     action='spend',
